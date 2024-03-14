@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface GenericRepository <T, ID>{
 
-    T saveOrUpdate(T toSave);
+     T saveOrUpdate(T toSave);
 
 
     T findById(ID id);
@@ -16,4 +16,5 @@ public interface GenericRepository <T, ID>{
     List<T> findAll();
 
     List<T> findByField(String column, String value);
+    String getQueryUpdate(T clazz);
 }
