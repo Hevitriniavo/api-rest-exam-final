@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Date;
@@ -44,6 +45,10 @@ public class GenericRepositoryImp<T extends Identifiable<ID>, ID> extends Databa
                 idColumnName++;
                 Object value = field.get(toSave);
                 Class<?> fieldType = field.getType();
+                if (value == null) {
+                    stmt.setNull(idColumnName, Types.NULL);
+                    continue;
+                }
 
                 switch (fieldType.getSimpleName()) {
                     case "String":
@@ -66,6 +71,9 @@ public class GenericRepositoryImp<T extends Identifiable<ID>, ID> extends Databa
                         break;
                     case "LocalDateTime":
                         stmt.setTimestamp(idColumnName, Timestamp.valueOf((LocalDateTime) value));
+                        break;
+                    case "LocalDate":
+                        stmt.setTimestamp(idColumnName, Timestamp.valueOf(((LocalDate) value).atStartOfDay()));
                         break;
                     case "Instant":
                         stmt.setTimestamp(idColumnName, Timestamp.from((Instant) value));
