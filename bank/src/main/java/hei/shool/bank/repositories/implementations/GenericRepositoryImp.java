@@ -12,6 +12,7 @@ import java.sql.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -49,45 +50,32 @@ public class GenericRepositoryImp<T extends Identifiable<ID>, ID> extends Databa
                     stmt.setNull(idColumnName, Types.NULL);
                     continue;
                 }
-
                 switch (fieldType.getSimpleName()) {
-                    case "String":
-                        stmt.setString(idColumnName, (String) value);
-                        break;
-                    case "Integer":
-                    case "int":
-                        stmt.setInt(idColumnName, (Integer) value);
-                        break;
-                    case "Long":
-                    case "long":
-                        stmt.setLong(idColumnName, (Long) value);
-                        break;
-                    case "Double":
-                    case "double":
-                        stmt.setDouble(idColumnName, (Double) value);
-                        break;
-                    case "Date":
-                        stmt.setTimestamp(idColumnName, new Timestamp(((Date) value).getTime()));
-                        break;
-                    case "LocalDateTime":
-                        stmt.setTimestamp(idColumnName, Timestamp.valueOf((LocalDateTime) value));
-                        break;
-                    case "LocalDate":
-                        stmt.setTimestamp(idColumnName, Timestamp.valueOf(((LocalDate) value).atStartOfDay()));
-                        break;
-                    case "Instant":
-                        stmt.setTimestamp(idColumnName, Timestamp.from((Instant) value));
-                        break;
-                    default:
-                        stmt.setNull(idColumnName, Types.BIGINT);
+                    case "String" -> stmt.setString(idColumnName, (String) value);
+                    case "Integer", "int" -> stmt.setInt(idColumnName, (Integer) value);
+                    case "Long", "long" -> stmt.setLong(idColumnName, (Long) value);
+                    case "Double", "double" -> stmt.setDouble(idColumnName, (Double) value);
+                    case "Date" -> stmt.setTimestamp(idColumnName, new Timestamp(((Date) value).getTime()));
+                    case "LocalDateTime" -> stmt.setTimestamp(idColumnName, Timestamp.valueOf((LocalDateTime) value));
+                    case "LocalDate" -> stmt.setTimestamp(idColumnName, Timestamp.valueOf(((LocalDate) value).atStartOfDay()));
+                    case "Instant" -> stmt.setTimestamp(idColumnName, Timestamp.from((Instant) value));
+                    default -> stmt.setNull(idColumnName, Types.BIGINT);
                 }
-            }
-            if (!isInsert){
-                stmt.setLong(idColumnName + 1, (Long) toSave.getId());
-            }
-            stmt.executeUpdate();
 
-            if (isInsert) {
+            }
+
+            if (!isInsert) {
+                Object idValue = toSave.getId();
+                switch (idValue) {
+                    case Long l -> stmt.setLong(idColumnName + 1, l);
+                    case Integer i -> stmt.setInt(idColumnName + 1, i);
+                    case LocalDateTime localDateTime -> stmt.setLong(idColumnName + 1,  localDateTime.toEpochSecond(ZoneOffset.UTC));
+                    case null, default -> stmt.setObject(idColumnName + 1, idValue);
+                }
+
+                stmt.executeUpdate();
+            } else {
+                stmt.executeUpdate();
                 generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     ID generatedId = getGeneratedId(generatedKeys, 1);
@@ -127,7 +115,18 @@ public class GenericRepositoryImp<T extends Identifiable<ID>, ID> extends Databa
     public String getQueryUpdate(T object){
         String className = object.getClass().getSimpleName().toLowerCase() + "s";
         String closeSetUpdate = this.getCloseSetUpdate(object.getClass());
-        return String.format("UPDATE %s SET %s WHERE id = ? ", this.toSnackCase(className), closeSetUpdate);
+        String idFieldName = null;
+        for (Field field : object.getClass().getDeclaredFields()) {
+            if (field.isAnnotationPresent(Id.class)) {
+                idFieldName = field.getName();
+                break;
+            }
+        }
+
+        if (idFieldName == null) {
+            throw new IllegalArgumentException("No fields annotated with @Id found in class" + object.getClass().getName());
+        }
+        return String.format("UPDATE %s SET %s WHERE %s = ? ", this.toSnackCase(className), closeSetUpdate, this.toSnackCase(idFieldName));
     }
 
 
@@ -151,7 +150,7 @@ public class GenericRepositoryImp<T extends Identifiable<ID>, ID> extends Databa
         StringBuilder closeSetUpdate = new StringBuilder();
         Field[] fields = aClass.getDeclaredFields();
         for (Field field : fields) {
-            if (!field.getName().equals("id")){
+            if (!field.isAnnotationPresent(Id.class)){
                 closeSetUpdate.append(this.toSnackCase(field.getName())).append("=?, ");
             }
         }
@@ -188,7 +187,7 @@ public class GenericRepositoryImp<T extends Identifiable<ID>, ID> extends Databa
         } else if (id instanceof Integer) {
             return (ID) Long.valueOf((Integer) id);
         } else {
-            throw new IllegalArgumentException("Type d'ID non pris en charge : " + id.getClass());
+            throw new IllegalArgumentException("Unsupported ID type : " + id.getClass());
         }
     }
 
