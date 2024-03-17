@@ -5,7 +5,7 @@ import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,22 +19,27 @@ public class Account implements Identifiable<Long> {
     @GeneratedValue
     private Long id;
 
-    private String customerFirstname;
-
-    private String customerLastname;
-
-    private LocalDate birthday;
+    private Double balance;
 
     private Double netMonthlySalary;
 
-    private Long accountNumber;
+    private String accountNumber;
+
+    private Double overdraftLimit;
+
+    private boolean overdraftEnabled;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    private Long userId;
     @Override
     public void setId(Long id) {
         this.id = id;
     }
-
     @Override
     public Long getId() {
-        return this.id;
+        return id;
     }
 }
