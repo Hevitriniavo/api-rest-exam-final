@@ -2,10 +2,10 @@ package hei.shool.bank.entites;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
-import hei.shool.bank.enums.TransactionCategoryType;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,18 +14,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class TransactionCategory implements Identifiable<Long> {
+public class Transaction  implements Identifiable<Long> {
+
     @Id
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private Long accountId;
 
-    private TransactionCategoryType type;
+    private Double amount;
 
-    private LocalDateTime createdAt;
+    private String reason;
 
-    private LocalDateTime updatedAt;
+    private LocalDate effectiveDate;
+
+    private LocalDateTime recordDate;
+
+    private String transactionType;
+
+    private Long categoryId;
     @Override
     public void setId(Long id) {
         this.id = id;
