@@ -43,4 +43,23 @@ public class Account implements Identifiable<Long> {
     public Long getId() {
         return id;
     }
+
+    public void credit(Double amount) {
+        balance += amount;
+    }
+
+    public boolean debit(Double amount) {
+        if (balance >= amount || (overdraftEnabled && (balance + overdraftLimit) >= amount)) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+    public boolean transferTo(Account destinationAccount, Double amount) {
+        if (debit(amount)) {
+            destinationAccount.credit(amount);
+            return true;
+        }
+        return false;
+    }
 }
