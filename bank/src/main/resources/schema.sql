@@ -1,4 +1,5 @@
 DROP DATABASE IF EXISTS numeric_banks;
+CREATE DATABASE numeric_banks;
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -15,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS transaction_categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    type VARCHAR(50) NOT NULL CHECK (type IN ('Entry', 'Exit')),
+    type VARCHAR(50) NOT NULL CHECK (type IN ('ENTRY', 'EXIT')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP
 );
