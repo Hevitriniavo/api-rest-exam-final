@@ -2,11 +2,9 @@ package hei.shool.bank.helpers;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
-import hei.shool.bank.repositories.Identifiable;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -94,9 +92,13 @@ public class DatabaseHelper {
     }
 
     private <T> String getClassName(Class<T> entityClass) {
-        return toSnackCase(entityClass.getSimpleName()).toLowerCase() + "s";
+        String className = toSnackCase(entityClass.getSimpleName()).toLowerCase();
+        if (className.endsWith("y")) {
+            return className.substring(0, className.length() - 1) + "ies";
+        } else {
+            return className + "s";
+        }
     }
-
     public void closeResources(PreparedStatement stmt, ResultSet generatedKeys) {
         try {
             if (stmt != null) {
@@ -110,24 +112,6 @@ public class DatabaseHelper {
         }
     }
 
-    public void closeResources(Connection con) {
-        try {
-            if (con != null) {
-                con.close();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to close resources", e);
-        }
-    }
-    public void closeResources(ResultSet generatedKeys) {
-        try {
-            if (generatedKeys != null) {
-                generatedKeys.close();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to close resources", e);
-        }
-    }
     public void closeResources( PreparedStatement stmt) {
         try {
             if (stmt != null) {
@@ -137,7 +121,5 @@ public class DatabaseHelper {
             throw new RuntimeException("Failed to close resources", e);
         }
     }
-
-
 }
 

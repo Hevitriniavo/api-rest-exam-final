@@ -24,10 +24,12 @@ public class DatabaseParam {
 
     @Bean
     public Connection getConnection() throws SQLException {
-        return  DriverManager.getConnection(
+        return DriverManager.getConnection(
                 this.url,
                 this.username,
                 this.password
         );
     }
+
+
 }
