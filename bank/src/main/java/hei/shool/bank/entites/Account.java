@@ -29,11 +29,12 @@ public class Account implements Identifiable<Long> {
 
     private boolean overdraftEnabled;
 
+    private Long userId;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    private Long userId;
     @Override
     public void setId(Long id) {
         this.id = id;

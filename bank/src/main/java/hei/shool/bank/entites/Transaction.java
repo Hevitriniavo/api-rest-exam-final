@@ -33,6 +33,11 @@ public class Transaction  implements Identifiable<Long> {
     private String transactionType;
 
     private Long categoryId;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
     @Override
     public void setId(Long id) {
         this.id = id;
