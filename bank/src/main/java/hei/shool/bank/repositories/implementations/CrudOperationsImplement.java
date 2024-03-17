@@ -93,7 +93,6 @@ public abstract class CrudOperationsImplement<T extends Identifiable<ID>, ID> im
         }
     }
 
-
     @Override
     public T deleteById(ID id) {
         PreparedStatement stmt = null;
@@ -152,14 +151,19 @@ public abstract class CrudOperationsImplement<T extends Identifiable<ID>, ID> im
                 String columnName = databaseHelper.toSnackCase(field.getName());
                 Object value = rs.getObject(columnName);
 
-                if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
-                    LocalDate localDate = ((java.sql.Date) value).toLocalDate();
-                    field.set(entity, localDate);
-                } else if (field.getType() == Double.class && value instanceof Float) {
-                    Double doubleValue = ((Float) value).doubleValue();
-                    field.set(entity, doubleValue);
-                } else {
-                    field.set(entity, value);
+                if (value != null) {
+                    if (field.getType().isEnum()) {
+                        Enum<?> enumValue = Enum.valueOf((Class<Enum>) field.getType(), value.toString());
+                        field.set(entity, enumValue);
+                    } else if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
+                        LocalDate localDate = ((java.sql.Date) value).toLocalDate();
+                        field.set(entity, localDate);
+                    } else if (field.getType() == Double.class && value instanceof Float) {
+                        Double doubleValue = ((Float) value).doubleValue();
+                        field.set(entity, doubleValue);
+                    } else {
+                        field.set(entity, value);
+                    }
                 }
             }
 
@@ -168,6 +172,7 @@ public abstract class CrudOperationsImplement<T extends Identifiable<ID>, ID> im
             throw new RuntimeException("Error while mapping ResultSet to entity", e);
         }
     }
+
 
 
 
@@ -213,7 +218,12 @@ public abstract class CrudOperationsImplement<T extends Identifiable<ID>, ID> im
             field.setAccessible(true);
             if (!field.isAnnotationPresent(Id.class)) {
                 try {
-                    stmt.setObject(index++, field.get(toSave));
+                    Object value = field.get(toSave);
+                    if (value instanceof Enum) {
+                        stmt.setString(index++, value.toString());
+                    } else {
+                        stmt.setObject(index++, value);
+                    }
                 } catch (SQLException | IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
