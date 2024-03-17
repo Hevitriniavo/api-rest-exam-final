@@ -1,0 +1,1 @@
+INSERT INTO ACCOUNTS (customer_firstname, customer_lastname, birthday, net_monthly_salary, account_number) VALUES ('JOHN', 'Doe', '1990-01-26', 2500.0, 1);

@@ -1,5 +1,6 @@
 package hei.shool.bank.entites;
 
+import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 public class Account implements Identifiable<Long> {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     private String customerFirstname;
