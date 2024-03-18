@@ -31,9 +31,6 @@ public class User implements Identifiable<Long> {
 
     private LocalDate birthday;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
     @Override
     public void setId(Long id) {
      this.id = id;

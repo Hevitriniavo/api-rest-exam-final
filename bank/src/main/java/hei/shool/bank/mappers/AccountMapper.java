@@ -22,6 +22,7 @@ public class AccountMapper implements Mapper<Account, AccountRequest, AccountRes
     @Override
     public Account fromDTO(AccountRequest dto) {
         Account account = new Account();
+        account.setId(dto.id());
         account.setBalance(dto.balance());
         account.setNetMonthlySalary(dto.netMonthlySalary());
         account.setAccountNumber(dto.accountNumber());

@@ -34,9 +34,6 @@ public class Transaction  implements Identifiable<Long> {
 
     private Long categoryId;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
     @Override
     public void setId(Long id) {

@@ -10,6 +10,7 @@ import hei.shool.bank.repositories.Identifiable;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.*;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Connection;
@@ -19,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public abstract class CrudOperationsImplement<T extends Identifiable<ID>, ID> implements CrudOperations<T, ID> {
+public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> implements CrudOperations<T, ID> {
     private final Class<T> entityClass;
     private final Connection connection;
     private final DatabaseHelper databaseHelper;
 
-    public CrudOperationsImplement(DatabaseHelper databaseHelper, Connection connection) {
+    public AbstractCrudOperations(DatabaseHelper databaseHelper, Connection connection) {
         this.databaseHelper = databaseHelper;
         this.connection = connection;
         Type superClass = getClass().getGenericSuperclass();
@@ -141,40 +142,6 @@ public abstract class CrudOperationsImplement<T extends Identifiable<ID>, ID> im
         return resultList;
     }
 
-    private T mapResultSetToEntity(ResultSet rs) throws SQLException {
-        try {
-            Constructor<T> constructor = entityClass.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            T entity = constructor.newInstance();
-            for (Field field : entityClass.getDeclaredFields()) {
-                field.setAccessible(true);
-                String columnName = databaseHelper.toSnackCase(field.getName());
-                Object value = rs.getObject(columnName);
-
-                if (value != null) {
-                    if (field.getType().isEnum()) {
-                        Enum<?> enumValue = Enum.valueOf((Class<Enum>) field.getType(), value.toString());
-                        field.set(entity, enumValue);
-                    } else if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
-                        LocalDate localDate = ((java.sql.Date) value).toLocalDate();
-                        field.set(entity, localDate);
-                    } else if (field.getType() == Double.class && value instanceof Float) {
-                        Double doubleValue = ((Float) value).doubleValue();
-                        field.set(entity, doubleValue);
-                    } else {
-                        field.set(entity, value);
-                    }
-                }
-            }
-
-            return entity;
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            throw new RuntimeException("Error while mapping ResultSet to entity", e);
-        }
-    }
-
-
-
 
     @Override
     public List<T> findByField(String column, String value) {
@@ -238,6 +205,40 @@ public abstract class CrudOperationsImplement<T extends Identifiable<ID>, ID> im
         }
     }
 
+    private T mapResultSetToEntity(ResultSet rs) throws SQLException {
+        try {
+            Constructor<T> constructor = entityClass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            T entity = constructor.newInstance();
+            for (Field field : entityClass.getDeclaredFields()) {
+                field.setAccessible(true);
+                String columnName = databaseHelper.toSnackCase(field.getName());
+                Object value = rs.getObject(columnName);
+
+                if (value != null) {
+                    if (field.getType().isEnum()) {
+                        Enum<?> enumValue = Enum.valueOf((Class<Enum>) field.getType(), value.toString());
+                        field.set(entity, enumValue);
+                    } else if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
+                        LocalDate localDate = ((java.sql.Date) value).toLocalDate();
+                        field.set(entity, localDate);
+                    } else if (field.getType() == Double.class && value instanceof BigDecimal) {
+                        Double doubleValue = ((BigDecimal) value).doubleValue();
+                        field.set(entity, doubleValue);
+                    } else if (field.getType() == Double.class && value instanceof Float) {
+                        Double doubleValue = ((Float) value).doubleValue();
+                        field.set(entity, doubleValue);
+                    } else {
+                        field.set(entity, value);
+                    }
+                }
+            }
+
+            return entity;
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            throw new RuntimeException("Error while mapping ResultSet to entity", e);
+        }
+    }
 }
 
 

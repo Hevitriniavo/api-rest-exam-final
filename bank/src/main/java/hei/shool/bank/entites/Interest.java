@@ -28,9 +28,6 @@ public class Interest implements Identifiable<Long> {
 
     private LocalDate interestDate;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
     @Override
     public void setId(Long id) {

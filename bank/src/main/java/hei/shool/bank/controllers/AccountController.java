@@ -1,6 +1,7 @@
 package hei.shool.bank.controllers;
 
-import hei.shool.bank.entites.Account;
+import hei.shool.bank.dtos.requests.AccountRequest;
+import hei.shool.bank.dtos.responses.AccountResponse;
 import hei.shool.bank.services.AccountService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,27 +19,23 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping
-    public Account createAccount(@RequestBody Account account){
-        return this.accountService.saveOrUpdate(account);
-    }
-
     @GetMapping
-    public List<Account> getAccounts(){
+    public List<AccountResponse> getAccounts(){
         return this.accountService.findAll();
     }
 
-    @GetMapping("/lastname/{lastname}")
-    public List<Account> getAccountsByLastName(@PathVariable String lastname){
-        return this.accountService.findByLastName(lastname);
+    @PostMapping("/create")
+    public AccountResponse createAccount(@RequestBody AccountRequest account){
+        return this.accountService.saveOrUpdate(account);
     }
+
     @GetMapping("/{id}")
-    public Account getAccount(@PathVariable Long id){
+    public AccountResponse getAccount(@PathVariable Long id){
         return this.accountService.findById(id);
     }
 
     @DeleteMapping("/{id}")
-    public Account destroyAccount(@PathVariable Long id){
+    public AccountResponse destroyAccount(@PathVariable Long id){
         return this.accountService.deleteById(id);
     }
 }

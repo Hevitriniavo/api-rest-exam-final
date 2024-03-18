@@ -1,17 +1,18 @@
 package hei.shool.bank.services;
 
-import hei.shool.bank.entites.Account;
+
+import hei.shool.bank.dtos.requests.AccountRequest;
+import hei.shool.bank.dtos.responses.AccountResponse;
 
 import java.util.List;
 
 public interface AccountService {
-    Account saveOrUpdate(Account account);
+    AccountResponse saveOrUpdate(AccountRequest account);
 
-    List<Account> findAll();
+    List<AccountResponse> findAll();
 
-    Account deleteById(Long id);
+    AccountResponse deleteById(Long id);
 
-    Account findById(Long id);
+    AccountResponse findById(Long id);
 
-    List<Account> findByLastName(String value);
 }

@@ -11,4 +11,4 @@ public record AccountResponse(
         Double overdraftLimit,
 
         boolean overdraftEnabled
-) { }
+) {}

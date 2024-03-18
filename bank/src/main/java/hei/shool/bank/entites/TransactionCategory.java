@@ -23,9 +23,6 @@ public class TransactionCategory implements Identifiable<Long> {
 
     private TransactionCategoryType type;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
     @Override
     public void setId(Long id) {
         this.id = id;

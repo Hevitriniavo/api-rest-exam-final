@@ -31,9 +31,6 @@ public class Account implements Identifiable<Long> {
 
     private Long userId;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
     @Override
     public void setId(Long id) {

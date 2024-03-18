@@ -39,9 +39,6 @@ public class TransactionsHistory  implements Identifiable<Long> {
 
     private LocalDateTime operationDate;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
     @Override
     public void setId(Long id) {

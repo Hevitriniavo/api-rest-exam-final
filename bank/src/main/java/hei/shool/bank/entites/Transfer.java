@@ -35,12 +35,7 @@ public class Transfer implements Identifiable<Long> {
     private String status;
 
     private String transferType;
-
-    private String referenceNumber;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
+    
 
 
     @Override
