@@ -9,6 +9,7 @@ import hei.shool.bank.services.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,12 +40,17 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public UserResponse deleteById(Long id) {
-        return userMapper.fromEntity(userRepository.deleteById(id));
-
+        User deletedUser = userRepository.deleteById(id);
+        if (deletedUser != null) {
+            return userMapper.fromEntity(deletedUser);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public UserResponse findById(Long id) {
-        return userMapper.fromEntity(userRepository.findById(id));
+        Optional<User> optionalAccount = userRepository.findById(id);
+        return optionalAccount.map(userMapper::fromEntity).orElse(null);
     }
 }

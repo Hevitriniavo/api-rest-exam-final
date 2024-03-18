@@ -9,6 +9,7 @@ import hei.shool.bank.services.AccountService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,11 +40,17 @@ public class AccountServiceImplement implements AccountService {
 
     @Override
     public AccountResponse deleteById(Long id) {
-        return accountMapper.fromEntity(accountRepository.deleteById(id));
+        Account deletedAccount = accountRepository.deleteById(id);
+        if (deletedAccount != null) {
+            return accountMapper.fromEntity(deletedAccount);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public AccountResponse findById(Long id) {
-        return accountMapper.fromEntity(accountRepository.findById(id));
+        Optional<Account> optionalAccount = accountRepository.findById(id);
+        return optionalAccount.map(accountMapper::fromEntity).orElse(null);
     }
 }

@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> implements CrudOperations<T, ID> {
@@ -65,14 +66,14 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
             }
             return toSave;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error while executing saveOrUpdate operation", e);
         } finally {
             databaseHelper.closeResources(stmt, generatedKeys);
         }
     }
 
     @Override
-    public T findById(ID id) {
+    public Optional<T> findById(ID id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -83,9 +84,9 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return mapResultSetToEntity(rs);
+                return Optional.of(mapResultSetToEntity(rs));
             } else {
-                return null;
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error while executing findById operation", e);
@@ -94,22 +95,24 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
         }
     }
 
+
     @Override
     public T deleteById(ID id) {
         PreparedStatement stmt = null;
-        T entity = this.findById(id);
+        Optional<T> entityOptional = this.findById(id);
 
         try {
-            String query = databaseHelper.queryDeleteById(entityClass);
-            stmt = connection.prepareStatement(query);
-            stmt.setObject(1, id);
-            int rowsAffected = stmt.executeUpdate();
+            if (entityOptional.isPresent()) {
+                String query = databaseHelper.queryDeleteById(entityClass);
+                stmt = connection.prepareStatement(query);
+                stmt.setObject(1, id);
+                int rowsAffected = stmt.executeUpdate();
 
-            if (rowsAffected > 0) {
-                return entity;
-            } else {
-                return null;
+                if (rowsAffected > 0) {
+                    return entityOptional.get();
+                }
             }
+            return null;
         } catch (SQLException e) {
             throw new RuntimeException("Error while executing deleteById operation", e);
         } finally {
@@ -134,7 +137,7 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
                 resultList.add(entity);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error while executing findAll operation", e);
+            System.out.println("Error while executing findAll operation "+ e);
         } finally {
             databaseHelper.closeResources(stmt, rs);
         }
@@ -160,7 +163,7 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
                 resultList.add(entity);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error while executing findByField operation", e);
+            System.out.println("Error while executing findByField operation "+ e);
         } finally {
             databaseHelper.closeResources(stmt, rs);
         }
