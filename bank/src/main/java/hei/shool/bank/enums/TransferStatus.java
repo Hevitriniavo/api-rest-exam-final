@@ -1,5 +1,7 @@
 package hei.shool.bank.enums;
 
 public enum TransferStatus {
-    COMPLETED
+    PENDING,
+    COMPLETED,
+    FAILED
 }

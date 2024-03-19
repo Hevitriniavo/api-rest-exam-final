@@ -36,8 +36,6 @@ public class Transfer implements Identifiable<Long> {
     private String status;
 
     private String transferType;
-    
-
 
     @Override
     public void setId(Long id) {
