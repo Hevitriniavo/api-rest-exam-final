@@ -6,6 +6,8 @@ import hei.shool.bank.entites.Account;
 import hei.shool.bank.entites.Transaction;
 import hei.shool.bank.entites.Transfer;
 import hei.shool.bank.enums.TransactionType;
+import hei.shool.bank.enums.TransferStatus;
+import hei.shool.bank.enums.TransferType;
 import hei.shool.bank.repositories.AccountRepository;
 import hei.shool.bank.repositories.TransactionRepository;
 import hei.shool.bank.repositories.TransferRepository;
@@ -93,6 +95,8 @@ public class TransactionServiceImplement implements TransactionService {
                     .senderAccountId(senderAccount.getId())
                     .receiverAccountId(receiverAccount.getId())
                     .reason(transferRequest.reason())
+                    .transferType(TransferType.BANK_TRANSFER.name())
+                    .status(TransferStatus.COMPLETED.name())
                     .build();
             transferRepository.saveOrUpdate(transfer);
             accountRepository.saveOrUpdate(senderAccount);
