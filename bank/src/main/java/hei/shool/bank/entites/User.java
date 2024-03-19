@@ -6,7 +6,6 @@ import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

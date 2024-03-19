@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,6 +32,7 @@ public class Account implements Identifiable<Long> {
 
     private Long userId;
 
+    private LocalDateTime lastTransactionDate;
 
     @Override
     public void setId(Long id) {

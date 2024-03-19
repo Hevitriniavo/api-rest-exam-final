@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     net_Monthly_salary NUMERIC(10, 2) DEFAULT NULL,
     account_number VARCHAR(255) UNIQUE,
     overdraft_limit NUMERIC(10, 2) NOT NULL,
+    last_transaction_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     overdraft_enabled BOOLEAN NOT NULL DEFAULT FALSE
 );
 

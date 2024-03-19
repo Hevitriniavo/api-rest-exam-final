@@ -2,11 +2,9 @@ package hei.shool.bank.entites;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
-import hei.shool.bank.enums.TransactionCategoryType;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,7 +19,7 @@ public class TransactionCategory implements Identifiable<Long> {
 
     private String name;
 
-    private TransactionCategoryType type;
+    private String  type;
 
     @Override
     public void setId(Long id) {
