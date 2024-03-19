@@ -8,6 +8,7 @@ import hei.shool.bank.repositories.AccountRepository;
 import hei.shool.bank.services.AccountService;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +35,9 @@ public class AccountServiceImplement implements AccountService {
     public List<AccountResponse> findAll() {
         return accountRepository
                 .findAll()
-                .stream().map(accountMapper::fromEntity)
+                .stream()
+                .sorted(Comparator.comparingLong(Account::getId))
+                .map(accountMapper::fromEntity)
                 .collect(Collectors.toList());
     }
 

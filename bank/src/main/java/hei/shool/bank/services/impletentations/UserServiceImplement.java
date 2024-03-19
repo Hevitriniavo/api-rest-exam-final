@@ -2,12 +2,14 @@ package hei.shool.bank.services.impletentations;
 
 import hei.shool.bank.dtos.requests.UserRequest;
 import hei.shool.bank.dtos.responses.UserResponse;
+import hei.shool.bank.entites.Account;
 import hei.shool.bank.entites.User;
 import hei.shool.bank.mappers.UserMapper;
 import hei.shool.bank.repositories.UserRepository;
 import hei.shool.bank.services.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +36,9 @@ public class UserServiceImplement implements UserService {
     public List<UserResponse> findAll() {
         return userRepository
                 .findAll()
-                .stream().map(userMapper::fromEntity)
+                .stream()
+                .sorted(Comparator.comparingLong(User::getId))
+                .map(userMapper::fromEntity)
                 .collect(Collectors.toList());
     }
 
