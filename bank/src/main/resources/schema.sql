@@ -19,11 +19,11 @@ CREATE TABLE IF NOT EXISTS transaction_categories (
 
 CREATE TABLE IF NOT EXISTS accounts (
     id BIGSERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
     balance REAL NOT NULL,
-    net_Monthly_salary NUMERIC(10, 2) DEFAULT NULL,
+    net_Monthly_salary REAL DEFAULT NULL,
     account_number VARCHAR(255) UNIQUE,
-    overdraft_limit NUMERIC(10, 2) NOT NULL,
+    overdraft_limit REAL NOT NULL,
     last_transaction_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     overdraft_enabled BOOLEAN NOT NULL DEFAULT FALSE
 );

@@ -24,18 +24,18 @@ public class UserController {
         return this.userService.findAll();
     }
 
-    @PostMapping("/create")
-    public UserResponse createAccount(@RequestBody UserRequest user){
+    @PostMapping
+    public UserResponse createOrUpdateUser(@RequestBody UserRequest user){
         return this.userService.saveOrUpdate(user);
     }
 
     @GetMapping("/{id}")
-    public UserResponse getAccount(@PathVariable Long id){
+    public UserResponse getUser(@PathVariable Long id){
         return this.userService.findById(id);
     }
 
     @DeleteMapping("/{id}")
-    public UserResponse destroyAccount(@PathVariable Long id){
+    public UserResponse destroyUser(@PathVariable Long id){
         return this.userService.deleteById(id);
     }
 }

@@ -24,8 +24,8 @@ public class AccountController {
         return this.accountService.findAll();
     }
 
-    @PostMapping("/create")
-    public AccountResponse createAccount(@RequestBody AccountRequest account){
+    @PostMapping
+    public AccountResponse createOrUpdateAccount(@RequestBody AccountRequest account){
         return this.accountService.saveOrUpdate(account);
     }
 
