@@ -5,7 +5,6 @@ import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 
 @Getter
@@ -24,6 +23,7 @@ public class Account implements Identifiable<Long> {
 
     private Double netMonthlySalary;
 
+    @GeneratedValue
     private String accountNumber;
 
     private Double overdraftLimit;
@@ -32,7 +32,6 @@ public class Account implements Identifiable<Long> {
 
     private Long userId;
 
-    private LocalDateTime lastTransactionDate;
 
     @Override
     public void setId(Long id) {

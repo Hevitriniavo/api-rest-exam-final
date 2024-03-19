@@ -2,7 +2,6 @@ package hei.shool.bank.services.impletentations;
 
 import hei.shool.bank.dtos.requests.UserRequest;
 import hei.shool.bank.dtos.responses.UserResponse;
-import hei.shool.bank.entites.Account;
 import hei.shool.bank.entites.User;
 import hei.shool.bank.mappers.UserMapper;
 import hei.shool.bank.repositories.UserRepository;

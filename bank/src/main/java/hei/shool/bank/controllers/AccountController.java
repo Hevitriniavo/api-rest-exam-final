@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/account")
+@RequestMapping("/accounts")
 public class AccountController {
 
 
