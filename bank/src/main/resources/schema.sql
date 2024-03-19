@@ -1,5 +1,7 @@
-DROP DATABASE IF EXISTS numeric_banks;
-CREATE DATABASE numeric_banks;
+DROP DATABASE IF EXISTS numeric_bank;
+CREATE DATABASE numeric_bank;
+
+\c numeric_bank;
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
@@ -8,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(255),
     first_name VARCHAR(255),
     email VARCHAR(255) UNIQUE NOT NULL,
-    birthday TIMESTAMP NOT NULL
+    birthday DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS transaction_categories (
