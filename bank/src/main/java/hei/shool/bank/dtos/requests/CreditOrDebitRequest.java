@@ -1,6 +1,6 @@
 package hei.shool.bank.dtos.requests;
 
-public record CreditRequest(
+public record CreditOrDebitRequest(
          Long accountId,
          Double amount
 ) { }
