@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
                 generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     ID generatedId = getGeneratedId(generatedKeys);
-                    toSave.setId(generatedId);
+                    return this.findById(generatedId).orElse(null);
                 } else {
                     throw new SQLException("Insert operation failed, no generated keys obtained.");
                 }
@@ -225,6 +226,9 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
                     } else if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
                         LocalDate localDate = ((java.sql.Date) value).toLocalDate();
                         field.set(entity, localDate);
+                    } else if (value instanceof java.sql.Timestamp && field.getType() == LocalDateTime.class) {
+                        LocalDateTime localDateTime = ((java.sql.Timestamp) value).toLocalDateTime();
+                        field.set(entity, localDateTime);
                     } else if (field.getType() == Double.class && value instanceof BigDecimal) {
                         Double doubleValue = ((BigDecimal) value).doubleValue();
                         field.set(entity, doubleValue);

@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS accounts (
     balance REAL NOT NULL,
     net_Monthly_salary REAL DEFAULT NULL,
     account_number VARCHAR(14) UNIQUE,
-    overdraft_limit REAL NOT NULL,
-    overdraft_enabled BOOLEAN NOT NULL DEFAULT FALSE
+    overdraft_limit REAL,
+    overdraft_enabled BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS transactions (
@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS interests (
     interest_date DATE NOT NULL
 );
 
+CREATE SEQUENCE account_id_seq;
 
 CREATE OR REPLACE FUNCTION generate_account_number() RETURNS TRIGGER AS $$
 BEGIN

@@ -32,7 +32,7 @@ public class CreditServiceImplement implements CreditService {
             return Map.of("message", "No account found with id " + creditRequest.accountId());
         }
         Account account = optionalAccount.get();
-        if (account.debit(creditRequest.amount())) {
+        if (account.credit(creditRequest.amount())) {
             Transaction transaction = new Transaction();
             transaction.setAccountId(creditRequest.accountId());
             transaction.setAmount(creditRequest.amount());

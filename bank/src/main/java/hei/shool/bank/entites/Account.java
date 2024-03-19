@@ -23,7 +23,6 @@ public class Account implements Identifiable<Long> {
 
     private Double netMonthlySalary;
 
-    @GeneratedValue
     private String accountNumber;
 
     private Double overdraftLimit;
@@ -42,8 +41,12 @@ public class Account implements Identifiable<Long> {
         return id;
     }
 
-    public void credit(Double amount) {
-        balance += amount;
+    public boolean credit(Double amount) {
+        if (amount > 0){
+            balance += amount;
+            return true;
+        }
+        return false;
     }
 
     public boolean debit(Double amount) {
@@ -55,8 +58,7 @@ public class Account implements Identifiable<Long> {
     }
     public boolean transferTo(Account destinationAccount, Double amount) {
         if (debit(amount)) {
-            destinationAccount.credit(amount);
-            return true;
+            return destinationAccount.credit(amount);
         }
         return false;
     }
