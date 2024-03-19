@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Builder
 public class Interest implements Identifiable<Long> {
 
     @Id

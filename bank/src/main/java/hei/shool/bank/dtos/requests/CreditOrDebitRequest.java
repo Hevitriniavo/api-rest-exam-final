@@ -2,5 +2,6 @@ package hei.shool.bank.dtos.requests;
 
 public record CreditOrDebitRequest(
          Long accountId,
-         Double amount
-) { }
+         Double amount,
+         String reason
+) {}

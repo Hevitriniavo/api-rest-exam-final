@@ -13,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Builder
 public class Account implements Identifiable<Long> {
 
     @Id

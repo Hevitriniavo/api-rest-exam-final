@@ -1,6 +1,7 @@
 package hei.shool.bank.controllers;
 
 import hei.shool.bank.dtos.requests.CreditOrDebitRequest;
+import hei.shool.bank.dtos.requests.TransferRequest;
 import hei.shool.bank.services.impletentations.TransactionServiceImplement;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +19,17 @@ public class TransactionController {
     }
 
     @RequestMapping("/credit")
-    public Map<String, String> creditMoney(@RequestBody CreditOrDebitRequest creditOrDebitRequest) {
+    public boolean creditMoney(@RequestBody CreditOrDebitRequest creditOrDebitRequest) {
         return withdrawalService.creditMoney(creditOrDebitRequest);
     }
 
     @RequestMapping("/debit")
-    public Map<String, String> debitMoney(@RequestBody CreditOrDebitRequest creditOrDebitRequest) {
+    public boolean debitMoney(@RequestBody CreditOrDebitRequest creditOrDebitRequest) {
         return withdrawalService.debitMoney(creditOrDebitRequest);
+    }
+
+    @RequestMapping("/transfer")
+    public boolean transferEnterTwoAccount(@RequestBody TransferRequest transferRequest) {
+        return withdrawalService.transferEnterTwoAccount(transferRequest);
     }
 }

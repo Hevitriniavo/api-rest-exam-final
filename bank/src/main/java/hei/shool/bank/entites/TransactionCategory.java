@@ -12,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Builder
 public class TransactionCategory implements Identifiable<Long> {
     @Id
     @GeneratedValue

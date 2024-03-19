@@ -1,11 +1,13 @@
 package hei.shool.bank.services;
 
 import hei.shool.bank.dtos.requests.CreditOrDebitRequest;
+import hei.shool.bank.dtos.requests.TransferRequest;
 
-import java.util.Map;
 
 public interface TransactionService {
 
-    Map<String, String> creditMoney(CreditOrDebitRequest creditOrDebitRequest);
-    Map<String, String> debitMoney(CreditOrDebitRequest creditOrDebitRequest);
+    boolean creditMoney(CreditOrDebitRequest creditOrDebitRequest);
+    boolean debitMoney(CreditOrDebitRequest creditOrDebitRequest);
+
+    boolean transferEnterTwoAccount(TransferRequest transferRequest);
 }
