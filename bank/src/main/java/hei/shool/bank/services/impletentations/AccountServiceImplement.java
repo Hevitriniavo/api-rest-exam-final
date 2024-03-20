@@ -1,6 +1,7 @@
 package hei.shool.bank.services.impletentations;
 
 import hei.shool.bank.dtos.requests.AccountRequest;
+import hei.shool.bank.dtos.requests.OperationResult;
 import hei.shool.bank.dtos.responses.AccountResponse;
 import hei.shool.bank.entites.Account;
 import hei.shool.bank.mappers.AccountMapper;
@@ -61,4 +62,17 @@ public class AccountServiceImplement implements AccountService {
         Optional<Account> optionalAccount = accountRepository.findById(id);
         return optionalAccount.map(accountMapper::fromEntity).orElse(null);
     }
+
+    @Override
+    public OperationResult toggleOverdraft(Long accountId, boolean enable) {
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if (optionalAccount.isEmpty()) {
+            return new OperationResult(false, "Account not found with ID: " + accountId);
+        }
+        Account account = optionalAccount.get();
+        account.setOverdraftEnabled(enable);
+        accountRepository.saveOrUpdate(account);
+        return new OperationResult(true, "Overdraft status updated successfully for account ID: " + accountId);
+    }
+
 }
