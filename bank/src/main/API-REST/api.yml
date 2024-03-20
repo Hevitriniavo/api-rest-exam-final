@@ -1,0 +1,18 @@
+openapi: '3.0.2'
+info:
+  title: Wallet Examen Final
+  version: '1.0'
+  description: STD22036 & STD22047 & STD22086
+servers:
+  - url: https://api.server.test/v1
+
+tags:
+  - name: Account
+  - name: Users
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: OK
+
