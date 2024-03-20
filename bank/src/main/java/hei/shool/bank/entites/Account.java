@@ -45,7 +45,12 @@ public class Account implements Identifiable<Long> {
     private Long bankId;
 
     public Account() {
-        this.overdraftLimit = netMonthlySalary.divide(BigDecimal.valueOf(3), 2, RoundingMode.HALF_UP);
+        if (this.netMonthlySalary == null) {
+            this.overdraftLimit = BigDecimal.ZERO;
+        } else {
+            this.overdraftLimit = this.netMonthlySalary
+                    .divide(BigDecimal.valueOf(3), 2, RoundingMode.HALF_UP);
+        }
         this.overdraftEnabled = false;
     }
     @Override

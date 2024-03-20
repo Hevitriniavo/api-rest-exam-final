@@ -223,7 +223,10 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
                     if (field.getType().isEnum()) {
                         Enum<?> enumValue = Enum.valueOf((Class<Enum>) field.getType(), value.toString());
                         field.set(entity, enumValue);
-                    } else if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
+                    } else if (field.getType() == BigDecimal.class && value instanceof Float) {
+                        BigDecimal bigDecimalValue = BigDecimal.valueOf((Float) value);
+                        field.set(entity, bigDecimalValue);
+                    }else if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
                         LocalDate localDate = ((java.sql.Date) value).toLocalDate();
                         field.set(entity, localDate);
                     } else if (value instanceof java.sql.Timestamp && field.getType() == LocalDateTime.class) {
