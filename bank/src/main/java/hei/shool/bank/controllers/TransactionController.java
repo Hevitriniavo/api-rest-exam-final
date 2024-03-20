@@ -24,6 +24,6 @@ public class TransactionController {
 
     @PostMapping("/debit")
     public CreditOrDebitResponse debit(@RequestBody CreditOrDebitRequest request){
-        return transactionService.credit(request);
+        return transactionService.debit(request);
     }
 }

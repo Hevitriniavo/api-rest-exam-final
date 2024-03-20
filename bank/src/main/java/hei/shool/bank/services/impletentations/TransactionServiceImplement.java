@@ -15,7 +15,6 @@ import hei.shool.bank.services.TransactionService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -73,6 +72,9 @@ public class TransactionServiceImplement implements TransactionService {
 
     private void processCredit(Account account, BigDecimal amount) {
         account.setBalance(account.getBalance().add(amount));
+        if (account.getBalance().compareTo(BigDecimal.ZERO) >= 0 && account.isOverdraftEnabled()) {
+            account.setOverdraftEnabled(false);
+        }
         accountRepository.saveOrUpdate(account);
     }
 
@@ -84,6 +86,7 @@ public class TransactionServiceImplement implements TransactionService {
         if (account.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             BigDecimal overdraftAmount = account.getBalance().abs();
             calculateAndStoreInterest(account, overdraftAmount);
+            account.setLastWithdrawalDate(LocalDate.now());
         }
         accountRepository.saveOrUpdate(account);
         return new CreditOrDebitResponse(true, "Débit réussi.");
@@ -107,14 +110,20 @@ public class TransactionServiceImplement implements TransactionService {
 
 
     private void calculateAndStoreInterest(Account account, BigDecimal overdraftAmount) {
-        BigDecimal interestAmount = calculateInterest(account, overdraftAmount);
-        account.setBalance(account.getBalance().subtract(interestAmount));
-        storeInterest(account, interestAmount);
+        if (overdraftAmount.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal interestAmount = calculateInterest(account, overdraftAmount);
+            account.setBalance(account.getBalance().subtract(interestAmount));
+            storeInterest(account, account.getBalance());
+        }
     }
 
     private BigDecimal calculateInterest(Account account, BigDecimal overdraftAmount) {
         LocalDate today = LocalDate.now();
-        long daysOverdrawn = ChronoUnit.DAYS.between(account.getLastWithdrawalDate(), today);
+        LocalDate lastWithdrawalDate = account.getLastWithdrawalDate();
+        if (lastWithdrawalDate == null) {
+            lastWithdrawalDate = account.getCreationDate();
+        }
+        long daysOverdrawn = ChronoUnit.DAYS.between(lastWithdrawalDate, today);
         BigDecimal interestRate = daysOverdrawn < 7 ? BigDecimal.valueOf(0.01) : BigDecimal.valueOf(0.02);
         return overdraftAmount.multiply(interestRate).multiply(BigDecimal.valueOf(daysOverdrawn));
     }
@@ -124,8 +133,9 @@ public class TransactionServiceImplement implements TransactionService {
                 .accountId(account.getId())
                 .amount(interestAmount)
                 .interestDate(LocalDate.now())
-                .interestRate(interestAmount.divide(account.getBalance().abs(), 2, RoundingMode.HALF_UP))
+                .interestRate(interestAmount.abs())
                 .build();
         interestRepository.saveOrUpdate(interest);
     }
+
 }
