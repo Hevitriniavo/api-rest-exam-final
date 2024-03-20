@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     overdraft_limit DECIMAL(10, 2) ,
     overdraft_enabled BOOLEAN DEFAULT FALSE,
     creation_date DATE DEFAULT CURRENT_DATE,
+    last_withdrawal_date DATE,
     bank_id BIGINT NOT NULL REFERENCES banks(id)
 );
 

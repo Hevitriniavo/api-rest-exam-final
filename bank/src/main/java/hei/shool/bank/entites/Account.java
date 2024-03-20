@@ -44,6 +44,8 @@ public class Account implements Identifiable<Long> {
 
     private Long bankId;
 
+    private LocalDate lastWithdrawalDate;
+
     public Account() {
         if (this.netMonthlySalary == null) {
             this.overdraftLimit = BigDecimal.ZERO;
