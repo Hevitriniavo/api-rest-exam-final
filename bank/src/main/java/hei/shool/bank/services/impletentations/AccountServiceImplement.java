@@ -70,12 +70,12 @@ public class AccountServiceImplement implements AccountService {
     public OperationResult toggleOverdraft(Long accountId, boolean enable) {
         Optional<Account> optionalAccount = accountRepository.findById(accountId);
         if (optionalAccount.isEmpty()) {
-            return new OperationResult(false, "Account not found with ID: " + accountId);
+            return new OperationResult(false, "Compte introuvable avec identifiant : " + accountId);
         }
         Account account = optionalAccount.get();
         account.setOverdraftEnabled(enable);
         accountRepository.saveOrUpdate(account);
-        return new OperationResult(true, "Overdraft status updated successfully for account ID: " + accountId);
+        return new OperationResult(true, "Statut de découvert mis à jour avec succès.");
     }
 
 }
