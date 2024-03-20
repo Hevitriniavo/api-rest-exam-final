@@ -41,12 +41,14 @@ public class TransactionServiceImplement implements TransactionService {
 
     @Override
     public boolean creditMoney(CreditOrDebitRequest creditOrDebitRequest) {
-        Optional<Account> optionalAccount = accountRepository.findById(creditOrDebitRequest.accountId());
+        Optional<Account> optionalAccount = accountRepository
+                .findById(creditOrDebitRequest.accountId());
         if (optionalAccount.isEmpty()) {
             return false;
         }
         Account account = optionalAccount.get();
         if (account.credit(creditOrDebitRequest.amount())) {
+            interestService.applyInterest(account);
             Transaction transaction = new Transaction();
             transaction.setAccountId(creditOrDebitRequest.accountId());
             transaction.setAmount(creditOrDebitRequest.amount());
@@ -69,7 +71,6 @@ public class TransactionServiceImplement implements TransactionService {
         }
         Account account = optionalAccount.get();
         if (account.debit(creditOrDebitRequest.amount())) {
-            interestService.applyInterest(account);
             Transaction transaction = Transaction.builder()
                     .accountId(creditOrDebitRequest.accountId())
                     .amount(creditOrDebitRequest.amount())

@@ -56,7 +56,7 @@ public class Account implements Identifiable<Long> {
     }
 
     public boolean credit(Double amount) {
-        if (amount > 0){
+        if (amount != null && amount > 0){
             balance += amount;
             return true;
         }
@@ -64,11 +64,13 @@ public class Account implements Identifiable<Long> {
     }
 
     public boolean debit(Double amount) {
-        if (balance >= amount || (overdraftEnabled && (balance + overdraftLimit) >= amount)) {
+        if (amount != null && amount >= 0 && balance >= amount ||
+                amount != null && amount >= 0 && (overdraftEnabled && (balance + overdraftLimit >= amount))
+        ){
             balance -= amount;
             return true;
         }
-        return false;
+      return false;
     }
     public boolean transferTo(Account destinationAccount, Double amount) {
         if (debit(amount)) {
