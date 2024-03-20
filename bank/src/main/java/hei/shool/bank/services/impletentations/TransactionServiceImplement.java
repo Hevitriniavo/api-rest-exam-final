@@ -11,6 +11,7 @@ import hei.shool.bank.enums.TransferType;
 import hei.shool.bank.repositories.AccountRepository;
 import hei.shool.bank.repositories.TransactionRepository;
 import hei.shool.bank.repositories.TransferRepository;
+import hei.shool.bank.services.InterestService;
 import hei.shool.bank.services.TransactionService;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +30,13 @@ public class TransactionServiceImplement implements TransactionService {
 
     private final TransferRepository transferRepository;
 
-    public TransactionServiceImplement(AccountRepository accountRepository, TransactionRepository transactionRepository, TransferRepository transferRepository) {
+    private final InterestService interestService;
+
+    public TransactionServiceImplement(AccountRepository accountRepository, TransactionRepository transactionRepository, TransferRepository transferRepository, InterestService interestService) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.transferRepository = transferRepository;
+        this.interestService = interestService;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class TransactionServiceImplement implements TransactionService {
             transaction.setReason(creditOrDebitRequest.reason());
             transaction.setEffectiveDate(LocalDate.now());
             transaction.setRecordDate(LocalDateTime.now());
-            transaction.setTransactionType("CREDIT");
+            transaction.setTransactionType(TransactionType.CREDIT);
             transactionRepository.saveOrUpdate(transaction);
             accountRepository.saveOrUpdate(account);
             return true;
@@ -65,12 +69,13 @@ public class TransactionServiceImplement implements TransactionService {
         }
         Account account = optionalAccount.get();
         if (account.debit(creditOrDebitRequest.amount())) {
+            interestService.applyInterest(account);
             Transaction transaction = Transaction.builder()
                     .accountId(creditOrDebitRequest.accountId())
                     .amount(creditOrDebitRequest.amount())
                     .reason(creditOrDebitRequest.reason())
                     .effectiveDate(LocalDate.now())
-                    .transactionType(TransactionType.DEBIT.name())
+                    .transactionType(TransactionType.DEBIT)
                     .recordDate(LocalDateTime.now())
                     .build();
             transactionRepository.saveOrUpdate(transaction);
@@ -95,8 +100,8 @@ public class TransactionServiceImplement implements TransactionService {
                     .senderAccountId(senderAccount.getId())
                     .receiverAccountId(receiverAccount.getId())
                     .reason(transferRequest.reason())
-                    .transferType(TransferType.BANK_TRANSFER.name())
-                    .status(TransferStatus.COMPLETED.name())
+                    .transferType(TransferType.BANK_TRANSFER)
+                    .status(TransferStatus.COMPLETED)
                     .build();
             transferRepository.saveOrUpdate(transfer);
             accountRepository.saveOrUpdate(senderAccount);

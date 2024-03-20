@@ -2,6 +2,7 @@ package hei.shool.bank.entites;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
+import hei.shool.bank.enums.TransactionType;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
@@ -31,7 +32,7 @@ public class Transaction  implements Identifiable<Long> {
 
     private LocalDateTime recordDate;
 
-    private String transactionType;
+    private TransactionType transactionType;
 
     private Long categoryId;
 

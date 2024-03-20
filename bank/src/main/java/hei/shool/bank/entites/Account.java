@@ -5,12 +5,11 @@ import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
+import java.time.LocalDate;
 
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
 @Builder
@@ -30,8 +29,22 @@ public class Account implements Identifiable<Long> {
 
     private boolean overdraftEnabled;
 
+    private LocalDate creationDate;
+
     private Long userId;
 
+    public Account() {
+        this.overdraftLimit = netMonthlySalary / 3;
+        this.overdraftEnabled = false;
+    }
+
+    public Account(Double initialBalance, Double netMonthlySalary, Long userId) {
+        this.balance = initialBalance;
+        this.netMonthlySalary = netMonthlySalary;
+        this.overdraftLimit = netMonthlySalary / 3;
+        this.overdraftEnabled = false;
+        this.userId = userId;
+    }
 
     @Override
     public void setId(Long id) {

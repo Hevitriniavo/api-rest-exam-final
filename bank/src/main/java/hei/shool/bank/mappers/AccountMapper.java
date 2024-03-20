@@ -26,8 +26,6 @@ public class AccountMapper implements Mapper<Account, AccountRequest, AccountRes
         account.setId(dto.id());
         account.setBalance(dto.balance());
         account.setNetMonthlySalary(dto.netMonthlySalary());
-        account.setOverdraftLimit(dto.overdraftLimit());
-        account.setOverdraftEnabled(dto.overdraftEnabled());
         return account;
     }
 }

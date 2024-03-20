@@ -6,8 +6,5 @@ public record AccountRequest(
 
      Double netMonthlySalary,
 
-     Double overdraftLimit,
-     Long userId,
-     boolean overdraftEnabled
-
+     Long userId
 ){}

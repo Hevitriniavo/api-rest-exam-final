@@ -2,6 +2,8 @@ package hei.shool.bank.entites;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
+import hei.shool.bank.enums.TransferStatus;
+import hei.shool.bank.enums.TransferType;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
@@ -33,9 +35,9 @@ public class Transfer implements Identifiable<Long> {
 
     private LocalDateTime recordDate;
 
-    private String status;
+    private TransferStatus status;
 
-    private String transferType;
+    private TransferType transferType;
 
     @Override
     public void setId(Long id) {

@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS accounts (
     net_Monthly_salary REAL DEFAULT NULL,
     account_number VARCHAR(14) UNIQUE,
     overdraft_limit REAL,
-    overdraft_enabled BOOLEAN DEFAULT FALSE
+    overdraft_enabled BOOLEAN DEFAULT FALSE,
+    creation_date DATE DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE IF NOT EXISTS transactions (
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS transactions_history (
     effective_date DATE NOT NULL,
     record_date TIMESTAMP NOT NULL,
     transaction_type VARCHAR(50) NOT NULL,
-    category_id BIGINT,
+    category_id BIGINT REFERENCES transaction_categories(id),
     operation_type VARCHAR(50) NOT NULL,
     operation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
