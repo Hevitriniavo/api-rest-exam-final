@@ -1,0 +1,53 @@
+openapi: '3.0.2'
+info:
+  title: Wallet Examen Final
+  version: '1.0'
+  description: STD22036 & STD22047 & STD22086
+servers:
+  - url: https://api.server.test/v1
+
+tags:
+  - name: Banks
+  - name: Accounts
+  - name: Transactions
+  - name: Transaction_histories
+  - name: Interests
+  - name: Transfers
+  - name: Categories
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: OK
+
+
+components:
+  responses:
+    Response400:
+      description: Bad Request
+      content:
+        application/json:
+          example:
+            statusCode: 400
+            message: "Bad Request"
+            property: "Value of the property in the response body"
+
+    Response403:
+      description: Forbidden
+      content:
+        application/json:
+          example:
+            statusCode: 403
+            message: "Forbidden"
+            property: "Value of the property in the response body"
+
+    Response500:
+      description: Internal Server Error
+      content:
+        application/json:
+          example:
+            statusCode: 500
+            message: "Internal Server Error"
+            property: "Value of the property in the response body"
+
