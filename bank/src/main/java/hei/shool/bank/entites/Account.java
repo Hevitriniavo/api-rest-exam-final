@@ -6,7 +6,6 @@ import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 
 
@@ -14,8 +13,10 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 public class Account implements Identifiable<Long> {
-
     @Id
     @GeneratedValue
     private Long id;
@@ -46,15 +47,6 @@ public class Account implements Identifiable<Long> {
 
     private LocalDate lastWithdrawalDate;
 
-    public Account() {
-        if (this.netMonthlySalary == null) {
-            this.overdraftLimit = BigDecimal.ZERO;
-        } else {
-            this.overdraftLimit = this.netMonthlySalary
-                    .divide(BigDecimal.valueOf(3), 2, RoundingMode.HALF_UP);
-        }
-        this.overdraftEnabled = false;
-    }
     @Override
     public void setId(Long id) {
         this.id = id;

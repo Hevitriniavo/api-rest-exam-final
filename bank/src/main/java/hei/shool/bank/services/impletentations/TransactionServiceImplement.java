@@ -15,6 +15,7 @@ import hei.shool.bank.services.TransactionService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -79,18 +80,25 @@ public class TransactionServiceImplement implements TransactionService {
     }
 
     private CreditOrDebitResponse processDebit(Account account, BigDecimal amount) {
-        if (account.getBalance().compareTo(amount) < 0 && !account.isOverdraftEnabled()) {
+        boolean hasSufficientFunds = account.getBalance().compareTo(amount) >= 0;
+        boolean isOverdraftEnabled = account.isOverdraftEnabled();
+        boolean canWithdrawWithOverdraft = isOverdraftEnabled && account.getBalance().add(account.getOverdraftLimit()).compareTo(amount) >= 0;
+        if (hasSufficientFunds || canWithdrawWithOverdraft) {
+            account.setBalance(account.getBalance().subtract(amount));
+            if (account.getBalance().compareTo(BigDecimal.ZERO) < 0) {
+                BigDecimal overdraftAmount = account.getBalance().abs();
+                calculateAndStoreInterest(account, overdraftAmount);
+                account.setLastWithdrawalDate(LocalDate.now());
+            }
+            accountRepository.saveOrUpdate(account);
+            return new CreditOrDebitResponse(true, "Débit réussi.");
+        } else if (isOverdraftEnabled && account.getBalance().add(account.getOverdraftLimit()).compareTo(amount) < 0) {
+            return new CreditOrDebitResponse(false, "Le montant du débit dépasse le plafond de découvert autorisé.");
+        } else {
             return new CreditOrDebitResponse(false, "Solde insuffisant.");
         }
-        account.setBalance(account.getBalance().subtract(amount));
-        if (account.getBalance().compareTo(BigDecimal.ZERO) < 0) {
-            BigDecimal overdraftAmount = account.getBalance().abs();
-            calculateAndStoreInterest(account, overdraftAmount);
-            account.setLastWithdrawalDate(LocalDate.now());
-        }
-        accountRepository.saveOrUpdate(account);
-        return new CreditOrDebitResponse(true, "Débit réussi.");
     }
+
 
     private void recordTransaction(Account account, CreditOrDebitRequest request, TransactionType transactionType) {
         Transaction transaction = Transaction.builder()

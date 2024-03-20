@@ -9,6 +9,8 @@ import hei.shool.bank.repositories.AccountRepository;
 import hei.shool.bank.services.AccountService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +35,7 @@ public class AccountServiceImplement implements AccountService {
         if (account.getId() == null){
             account.setCreationDate(LocalDate.now());
         }
+        account.setOverdraftLimit(account.getBalance().divide(BigDecimal.valueOf(3.00), 2, RoundingMode.HALF_UP));
         Account savedAccount = accountRepository.saveOrUpdate(account);
         return accountMapper.fromEntity(savedAccount);
     }
