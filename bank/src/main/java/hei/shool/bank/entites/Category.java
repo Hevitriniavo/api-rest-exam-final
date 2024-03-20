@@ -2,10 +2,10 @@ package hei.shool.bank.entites;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
+import hei.shool.bank.enums.CategoryType;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -14,26 +14,18 @@ import java.time.LocalDate;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class User implements Identifiable<Long> {
+public class Category implements Identifiable<Long> {
     @Id
     @GeneratedValue
     private Long id;
 
-    private String username;
+    private String name;
 
-    private String password;
-
-    private String lastName;
-
-    private String firstName;
-
-    private String email;
-
-    private LocalDate birthday;
+    private CategoryType type;
 
     @Override
     public void setId(Long id) {
-     this.id = id;
+        this.id = id;
     }
     @Override
     public Long getId() {

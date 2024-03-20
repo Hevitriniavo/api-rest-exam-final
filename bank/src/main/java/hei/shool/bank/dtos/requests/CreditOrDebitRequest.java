@@ -1,7 +1,9 @@
 package hei.shool.bank.dtos.requests;
 
+import java.math.BigDecimal;
+
 public record CreditOrDebitRequest(
          Long accountId,
-         Double amount,
+         BigDecimal amount,
          String reason
 ) {}

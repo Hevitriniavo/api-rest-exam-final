@@ -8,6 +8,7 @@ import hei.shool.bank.repositories.AccountRepository;
 import hei.shool.bank.services.AccountService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +27,12 @@ public class AccountServiceImplement implements AccountService {
 
 
     @Override
-    public AccountResponse saveOrUpdate(AccountRequest account) {
-        Account savedAccount = accountRepository.saveOrUpdate(accountMapper.fromDTO(account));
+    public AccountResponse saveOrUpdate(AccountRequest accountRequest) {
+        Account account = accountMapper.fromDTO(accountRequest);
+        if (account.getId() == null){
+            account.setCreationDate(LocalDate.now());
+        }
+        Account savedAccount = accountRepository.saveOrUpdate(account);
         return accountMapper.fromEntity(savedAccount);
     }
 

@@ -5,6 +5,7 @@ import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -22,9 +23,9 @@ public class Interest implements Identifiable<Long> {
 
     private Long accountId;
 
-    private Double amount;
+    private BigDecimal amount;
 
-    private Double interestRate;
+    private BigDecimal interestRate;
 
     private LocalDate interestDate;
 

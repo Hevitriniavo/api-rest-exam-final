@@ -11,20 +11,31 @@ public class AccountMapper implements Mapper<Account, AccountRequest, AccountRes
     public AccountResponse fromEntity(Account entity) {
         return new AccountResponse(
                 entity.getId(),
+                entity.getPassword(),
+                entity.getLastName(),
+                entity.getFirstName(),
+                entity.getEmail(),
+                entity.getBirthday(),
                 entity.getBalance(),
                 entity.getNetMonthlySalary(),
                 entity.getAccountNumber(),
                 entity.getOverdraftLimit(),
-                entity.isOverdraftEnabled()
+                entity.isOverdraftEnabled(),
+                entity.getCreationDate()
         );
     }
 
     @Override
     public Account fromDTO(AccountRequest dto) {
         Account account = new Account();
-        account.setUserId(dto.userId());
         account.setId(dto.id());
+        account.setPassword(dto.password());
+        account.setLastName(dto.lastName());
+        account.setFirstName(dto.firstName());
+        account.setEmail(dto.email());
+        account.setBirthday(dto.birthday());
         account.setBalance(dto.balance());
+        account.setBankId(dto.bankId());
         account.setNetMonthlySalary(dto.netMonthlySalary());
         return account;
     }

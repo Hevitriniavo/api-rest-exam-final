@@ -1,14 +1,19 @@
 package hei.shool.bank.dtos.responses;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 public record AccountResponse(
         Long id,
-        Double balance,
-
-        Double netMonthlySalary,
-
+        String password,
+        String lastName,
+        String firstName,
+        String email,
+        LocalDate birthday,
+        BigDecimal balance,
+        BigDecimal netMonthlySalary,
         String accountNumber,
-
-        Double overdraftLimit,
-
-        boolean overdraftEnabled
+        BigDecimal overdraftLimit,
+        boolean overdraftEnabled,
+        LocalDate creationDate
 ) {}

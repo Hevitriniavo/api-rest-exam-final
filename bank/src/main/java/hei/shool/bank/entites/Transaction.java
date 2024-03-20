@@ -6,8 +6,8 @@ import hei.shool.bank.enums.TransactionType;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,17 +24,17 @@ public class Transaction  implements Identifiable<Long> {
 
     private Long accountId;
 
-    private Double amount;
+    private BigDecimal amount;
 
     private String reason;
 
     private LocalDate effectiveDate;
 
-    private LocalDateTime recordDate;
-
     private TransactionType transactionType;
 
     private Long categoryId;
+
+    private String comment;
 
 
     @Override

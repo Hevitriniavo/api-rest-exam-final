@@ -3,10 +3,10 @@ package hei.shool.bank.entites;
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
 import hei.shool.bank.enums.TransferStatus;
-import hei.shool.bank.enums.TransferType;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -27,17 +27,20 @@ public class Transfer implements Identifiable<Long> {
 
     private Long receiverAccountId;
 
-    private Double amount;
+    private BigDecimal amount;
 
     private String reason;
 
     private LocalDate effectiveDate;
 
-    private LocalDateTime recordDate;
+    private LocalDateTime registrationDate;
 
     private TransferStatus status;
 
-    private TransferType transferType;
+    private String reference;
+
+    private LocalDateTime cancelledDate;
+
 
     @Override
     public void setId(Long id) {

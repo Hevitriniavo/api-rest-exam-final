@@ -1,10 +1,16 @@
 package hei.shool.bank.dtos.requests;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 public record AccountRequest(
-     Long id,
-     Double balance,
-
-     Double netMonthlySalary,
-
-     Long userId
+         Long id,
+         String password,
+         String lastName,
+         String firstName,
+         String email,
+         LocalDate birthday,
+         BigDecimal balance,
+         BigDecimal netMonthlySalary,
+         Long bankId
 ){}

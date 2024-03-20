@@ -1,11 +1,13 @@
 package hei.shool.bank.dtos.requests;
 
+import java.math.BigDecimal;
+
 public record TransferRequest (
          Long senderAccountId,
 
          Long receiverAccountId,
 
-         Double amount,
+         BigDecimal amount,
 
          String reason
 ){}

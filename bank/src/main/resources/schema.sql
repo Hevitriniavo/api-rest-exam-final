@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     comment VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS transactions_history (
+CREATE TABLE IF NOT EXISTS transactions_histories (
     id BIGSERIAL PRIMARY KEY,
     transaction_id BIGINT REFERENCES transactions(id),
     operation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -60,8 +60,7 @@ CREATE TABLE IF NOT EXISTS transfers (
     registration_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(255) DEFAULT 'PENDING',
     reference VARCHAR(255) UNIQUE NOT NULL,
-    cancelled_date TIMESTAMP,
-    group_label VARCHAR(255)
+    cancelled_date TIMESTAMP
 );
 
 
