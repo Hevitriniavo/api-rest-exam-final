@@ -22,7 +22,7 @@ paths:
         - Banks
       summary: Retrieve list of banks
       description: Retrieve a list of all banks in the wallet app, optionally filtered by bank.
-      operationId: getAccounts
+      operationId: getBanks
       responses:
         '200':
           description: List of banks retrieved successfully.
@@ -43,6 +43,7 @@ paths:
       tags:
         - Banks
       summary: Create a new account
+      operationId: createOrUpdateBank
       requestBody:
         required: true
         content:
@@ -51,7 +52,7 @@ paths:
               $ref: '#/components/schemas/Bank'
       responses:
         '200':
-          description: Account created successfully.
+          description: Bank created successfully.
           content:
             application/json:
               schema:
@@ -61,6 +62,25 @@ paths:
         '400':
           description: Invalid request.
 
+  /banks{id}:
+    delete:
+      tags:
+        - Banks
+      summary: Delete a bank by id
+      description: You can only delete one bank using the ID
+      operationId: destroyBank
+      parameters:
+        - name: id 
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid bank supplied
+        '404':
+          description: Bank not found
 
 components:
   schemas:
