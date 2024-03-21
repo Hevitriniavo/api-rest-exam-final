@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -119,13 +120,13 @@ public class TransactionServiceImplement implements TransactionService {
 
     private void calculateAndStoreInterest(Account account, BigDecimal overdraftAmount) {
         if (overdraftAmount.compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal interestAmount = calculateInterest(account, overdraftAmount);
-            account.setBalance(account.getBalance().subtract(interestAmount));
-            storeInterest(account, account.getBalance());
+            Map<String , BigDecimal> interests = calculateInterest(account, overdraftAmount);
+            account.setBalance(account.getBalance().subtract(interests.get("amount")));
+            storeInterest(account, account.getBalance(), interests.get("interestAmount"));
         }
     }
 
-    private BigDecimal calculateInterest(Account account, BigDecimal overdraftAmount) {
+    private Map<String , BigDecimal> calculateInterest(Account account, BigDecimal overdraftAmount) {
         LocalDate today = LocalDate.now();
         LocalDate lastWithdrawalDate = account.getLastWithdrawalDate();
         if (lastWithdrawalDate == null) {
@@ -133,13 +134,16 @@ public class TransactionServiceImplement implements TransactionService {
         }
         long daysOverdrawn = ChronoUnit.DAYS.between(lastWithdrawalDate, today);
         BigDecimal interestRate = daysOverdrawn < 7 ? BigDecimal.valueOf(0.01) : BigDecimal.valueOf(0.02);
-        return overdraftAmount.multiply(interestRate).multiply(BigDecimal.valueOf(daysOverdrawn));
+        return Map.of(
+                "amount", overdraftAmount.multiply(interestRate).multiply(BigDecimal.valueOf(daysOverdrawn)),
+                "interestAmount", interestRate
+        );
     }
 
-    private void storeInterest(Account account, BigDecimal interestAmount) {
+    private void storeInterest(Account account, BigDecimal amount, BigDecimal interestAmount) {
         Interest interest = Interest.builder()
                 .accountId(account.getId())
-                .amount(interestAmount)
+                .amount(amount.abs())
                 .interestDate(LocalDate.now())
                 .interestRate(interestAmount.abs())
                 .build();
