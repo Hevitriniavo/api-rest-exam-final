@@ -1,28 +1,245 @@
-openapi: '3.0.2'
+openapi: "3.0.2"
 info:
-  title: Wallet Examen Final
-  version: '1.0'
-  description: STD22036 & STD22047 & STD22086
+  title: Digital Bank API
+  version: "1.0"
+  description: API for managing banking operations for a digital bank. STD22036 & STD22047 & STD22086
 servers:
-  - url: https://api.server.test/v1
+  - url: http://localhost:8080
 
 tags:
   - name: Banks
+  - name: Categories
   - name: Accounts
   - name: Transactions
   - name: Transaction_histories
-  - name: Interests
   - name: Transfers
-  - name: Categories
+  - name: Interests
+
 paths:
-  /test:
+  /api/banks:
     get:
+      tags:
+        - Banks
+      summary: Retrieve list of banks
+      description: Retrieve a list of all banks in the wallet app, optionally filtered by bank.
+      operationId: getAccounts
       responses:
         '200':
-          description: OK
+          description: List of banks retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/Response400'
+        '403':
+          $ref: '#/components/responses/Response403'
+        '500':
+          $ref: '#/components/responses/Response500'
 
 
 components:
+  schemas:
+    Bank:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The unique identifier for the bank.
+        name:
+          type: string
+          description: The name of the bank.
+        address:
+          type: string
+          description: The address of the bank.
+        phone:
+          type: string
+          description: The phone number of the bank.
+        email:
+          type: string
+          format: email
+          description: The email address of the bank.
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The unique identifier for the category.
+        name:
+          type: string
+          description: The name of the category.
+        type:
+          type: string
+          description: The type of the category (ENTREE or SORTIE).
+          enum:
+            - ENTREE
+            - SORTIE
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The unique identifier for the account.
+        password:
+          type: string
+          description: The password of the account.
+        last_name:
+          type: string
+          description: The last name of the account holder.
+        first_name:
+          type: string
+          description: The first name of the account holder.
+        email:
+          type: string
+          format: email
+          description: The email address of the account holder.
+        birthday:
+          type: string
+          format: date
+          description: The birthday of the account holder.
+        balance:
+          type: number
+          format: float
+          description: The balance of the account.
+        net_Monthly_salary:
+          type: number
+          format: float
+          description: The net monthly salary of the account holder.
+        account_number:
+          type: string
+          description: The account number.
+        overdraft_limit:
+          type: number
+          format: float
+          description: The overdraft limit of the account.
+        overdraft_enabled:
+          type: boolean
+          description: Indicates if overdraft is enabled for the account.
+        creation_date:
+          type: string
+          format: date
+          description: The creation date of the account.
+        bank_id:
+          type: integer
+          format: int64
+          description: The ID of the bank associated with the account.
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The unique identifier for the transaction.
+        account_id:
+          type: integer
+          format: int64
+          description: The ID of the account associated with the transaction.
+        amount:
+          type: number
+          format: float
+          description: The amount of the transaction.
+        reason:
+          type: string
+          description: The reason for the transaction.
+        effective_date:
+          type: string
+          format: date
+          description: The effective date of the transaction.
+        transaction_type:
+          type: string
+          description: The type of the transaction.
+        category_id:
+          type: integer
+          format: int64
+          description: The ID of the category associated with the transaction.
+        comment:
+          type: string
+          description: Additional comment for the transaction.
+    TransactionHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The unique identifier for the transaction history.
+        transaction_id:
+          type: integer
+          format: int64
+          description: The ID of the transaction associated with the history.
+        operation_date:
+          type: string
+          format: date-time
+          description: The operation date of the transaction history.
+    Transfer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The unique identifier for the transfer.
+        sender_account_id:
+          type: integer
+          format: int64
+          description: The ID of the sender account.
+        receiver_account_id:
+          type: integer
+          format: int64
+          description: The ID of the receiver account.
+        amount:
+          type: number
+          format: float
+          description: The amount of the transfer.
+        reason:
+          type: string
+          description: The reason for the transfer.
+        effective_date:
+          type: string
+          format: date-time
+          description: The effective date of the transfer.
+        registration_date:
+          type: string
+          format: date-time
+          description: The registration date of the transfer.
+        status:
+          type: string
+          description: The status of the transfer.
+        reference:
+          type: string
+          description: The reference of the transfer.
+        cancelled_date:
+          type: string
+          format: date-time
+          description: The cancelled date of the transfer.
+    Interest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The unique identifier for the interest.
+        account_id:
+          type: integer
+          format: int64
+          description: The ID of the account associated with the interest.
+        amount:
+          type: number
+          format: float
+          description: The amount of the interest.
+        interest_rate:
+          type: number
+          format: float
+          description: The interest rate.
+        interest_date:
+          type: string
+          format: date
+          description: The date of the interest.
+
+
   responses:
     Response400:
       description: Bad Request
@@ -50,4 +267,3 @@ components:
             statusCode: 500
             message: "Internal Server Error"
             property: "Value of the property in the response body"
-
