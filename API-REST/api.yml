@@ -44,7 +44,7 @@ paths:
     post:
       tags:
         - Banks
-      summary: Create a new account
+      summary: Create a new bank
       operationId: createOrUpdateBank
       requestBody:
         required: true
@@ -109,6 +109,58 @@ paths:
         '404':
           $ref: '#/components/responses/Response404'
     
+    # the end of the path bank
+
+    # begins the path count
+
+  /accounts:
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve list of account
+      description: Retrieve a list of all account in the wallet app, optionally filtered by account.
+      operationId: getAccounts
+      responses:
+        '200':
+          description: List of account retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/Response400'
+        '403':
+          $ref: '#/components/responses/Response403'
+        '404':
+          $ref: '#/components/responses/Response404'
+        '500':
+          $ref: '#/components/responses/Response500'
+
+    post:
+      tags:
+        - Accounts
+      summary: Create a new account
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Account created successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/Response400'
+
     
 
 components:
