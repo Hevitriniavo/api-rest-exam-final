@@ -26,12 +26,12 @@ public class AccountController {
         return accountService.findAll();
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public AccountResponse updateAccount(@RequestBody UpdateAccountRequest account){
         return accountService.update(account);
     }
 
-    @PutMapping("/create")
+    @PostMapping("/create")
     public AccountResponse createAccount(@RequestBody CreateAccountRequest account){
         return accountService.create(account);
     }

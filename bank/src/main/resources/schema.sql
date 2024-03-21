@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     overdraft_enabled BOOLEAN DEFAULT FALSE,
     creation_date DATE DEFAULT CURRENT_DATE,
     last_withdrawal_date DATE,
-    bank_id BIGINT NOT NULL REFERENCES banks(id)
+    bank_id BIGINT NOT NULL REFERENCES banks(id)  ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS transactions (
@@ -41,20 +41,20 @@ CREATE TABLE IF NOT EXISTS transactions (
     reason VARCHAR(255),
     effective_date DATE NOT NULL,
     transaction_type VARCHAR(50) NOT NULL,
-    category_id BIGINT REFERENCES categories(id),
+    category_id BIGINT REFERENCES categories(id)  ON DELETE CASCADE ON UPDATE CASCADE,
     comment VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS transactions_histories (
     id BIGSERIAL PRIMARY KEY,
-    transaction_id BIGINT REFERENCES transactions(id),
+    transaction_id BIGINT REFERENCES transactions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     operation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS transfers (
     id BIGSERIAL PRIMARY KEY,
-    sender_account_id BIGINT REFERENCES accounts(id),
-    receiver_account_id BIGINT REFERENCES accounts(id),
+    sender_account_id BIGINT REFERENCES accounts(id)  ON DELETE CASCADE ON UPDATE CASCADE,
+    receiver_account_id BIGINT REFERENCES accounts(id)  ON DELETE CASCADE ON UPDATE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
     reason VARCHAR(255),
     effective_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS transfers (
 
 CREATE TABLE IF NOT EXISTS interests (
     id BIGSERIAL PRIMARY KEY,
-    account_id BIGINT REFERENCES accounts(id),
+    account_id BIGINT REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
     interest_rate DECIMAL(10, 2) NOT NULL,
     interest_date DATE NOT NULL
