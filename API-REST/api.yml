@@ -4,7 +4,7 @@ info:
   version: "1.0"
   description: API for managing banking operations for a digital bank. STD22036 & STD22047 & STD22086
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:8080
 
 tags:
   - name: Banks
@@ -16,13 +16,29 @@ tags:
   - name: Interests
 
 paths:
-  /banks:
+  /api/banks:
     get:
       tags:
         - Banks
+      summary: Retrieve list of banks
+      description: Retrieve a list of all banks in the wallet app, optionally filtered by bank.
+      operationId: getAccounts
       responses:
-        "200":
-          description: OK
+        '200':
+          description: List of banks retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/Response400'
+        '403':
+          $ref: '#/components/responses/Response403'
+        '500':
+          $ref: '#/components/responses/Response500'
+
 
 components:
   schemas:
