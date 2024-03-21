@@ -36,9 +36,11 @@ paths:
           $ref: '#/components/responses/Response400'
         '403':
           $ref: '#/components/responses/Response403'
+        '404':
+          $ref: '#/components/responses/Response404'
         '500':
           $ref: '#/components/responses/Response500'
-    
+
     post:
       tags:
         - Banks
@@ -60,9 +62,34 @@ paths:
                 items:
                   $ref: '#/components/schemas/Bank'
         '400':
-          description: Invalid request.
+          $ref: '#/components/responses/Response400'
+    
 
-  /banks{id}:
+  /banks/{id}:
+    get:
+      tags:
+        - Banks
+      summary: Retrieve one of banks
+      description: Retrieve only one of all banks in the wallet app, optionally filtered by bank.
+      operationId: getBank
+      responses:
+        '200':
+          description: id of banks retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/Response400'
+        '403':
+          $ref: '#/components/responses/Response403'
+        '404':
+          $ref: '#/components/responses/Response404'
+        '500':
+          $ref: '#/components/responses/Response500'
+    
     delete:
       tags:
         - Banks
@@ -78,9 +105,11 @@ paths:
             type: string
       responses:
         '400':
-          description: Invalid bank supplied
+          $ref: '#/components/responses/Response400'
         '404':
-          description: Bank not found
+          $ref: '#/components/responses/Response404'
+    
+    
 
 components:
   schemas:
@@ -300,6 +329,16 @@ components:
             statusCode: 403
             message: "Forbidden"
             property: "Value of the property in the response body"
+
+    Response404:
+      description: Not Found
+      content:
+        application/json:
+          example:
+            statusCode: 404
+            message: "Not Found"
+            property: "Value of the property in the response body"
+
 
     Response500:
       description: Internal Server Error
