@@ -63,13 +63,15 @@ paths:
                   $ref: '#/components/schemas/Bank'
         '400':
           $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
     
 
   /banks/{id}:
     get:
       tags:
         - Banks
-      summary: Retrieve one of banks
+      summary: Retrieve one of banks by id
       description: Retrieve only one of all banks in the wallet app, optionally filtered by bank.
       operationId: getBank
       responses:
@@ -137,6 +139,33 @@ paths:
           $ref: '#/components/responses/Response404'
         '500':
           $ref: '#/components/responses/Response500'
+  
+  /create:
+    post:
+      tags:
+        - Accounts
+      summary: Create a new account
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Account created successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/Response400'
+        '500':
+          $ref: '#/components/responses/Response500'
+  
   /update:
     put:
       tags:
@@ -170,24 +199,21 @@ paths:
           $ref: '#/components/responses/Response400'
         '403':
           $ref: '#/components/responses/Response403'
+        '404':
+          $ref: '#/components/responses/Response404'
         '500':
           $ref: '#/components/responses/Response500'
-  
-  /create:
-    post:
+
+  /accounts{id}:
+    get:
       tags:
         - Accounts
-      summary: Create a new account
-      operationId: createAccount
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Account'
+      summary: Retrieve one of accounts by id
+      description: Retrieve only one of all accounts in the wallet app, optionally filtered by account.
+      operationId: getAccount
       responses:
         '200':
-          description: Account created successfully.
+          description: One of accounts retrieved successfully.
           content:
             application/json:
               schema:
@@ -196,6 +222,30 @@ paths:
                   $ref: '#/components/schemas/Account'
         '400':
           $ref: '#/components/responses/Response400'
+        '403':
+          $ref: '#/components/responses/Response403'
+        '404':
+          $ref: '#/components/responses/Response404'
+        '500':
+          $ref: '#/components/responses/Response500'
+    delete:
+      tags:
+        - Accounts
+      summary: Delete a account by id
+      description: You can only delete one account using the ID
+      operationId: destroyAccount
+      parameters:
+        - name: id 
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          $ref: '#/components/responses/Response400'
+        '404':
+          $ref: '#/components/responses/Response404'
 
     
 
