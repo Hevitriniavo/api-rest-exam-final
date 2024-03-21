@@ -106,6 +106,14 @@ paths:
           schema:
             type: string
       responses:
+        '200':
+          description: Delete bank successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
         '400':
           $ref: '#/components/responses/Response400'
         '404':
@@ -204,6 +212,46 @@ paths:
         '500':
           $ref: '#/components/responses/Response500'
 
+  /{accountId}/overdraft:
+    put:
+      tags:
+        - Accounts
+      summary: ask for a debt
+      description: edit account items.
+      operationId: toggleOverdraft
+      parameters:
+        - name: id 
+          in: path
+          description: Id that needs to be update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: request received
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: "thanks for borrowing the balance"
+                  properties: false
+
+        '400':
+          $ref: '#/components/responses/Response400'
+        '403':
+          $ref: '#/components/responses/Response403'
+        '404':
+          $ref: '#/components/responses/Response404'
+        '500':
+          $ref: '#/components/responses/Response500'
+
   /accounts{id}:
     get:
       tags:
@@ -242,6 +290,14 @@ paths:
           schema:
             type: string
       responses:
+        '200':
+          description: Delete account successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
         '400':
           $ref: '#/components/responses/Response400'
         '404':
@@ -333,11 +389,8 @@ components:
           type: string
           format: date
           description: The creation date of the account.
-        bank_id:
-          allOf:
-            - $ref: "#/components/schemas/Bank"
-          description: The ID of the bank associated with the account.
-    
+       
+       
     Transaction:
       type: object
       properties:
