@@ -117,12 +117,12 @@ paths:
     get:
       tags:
         - Accounts
-      summary: Retrieve list of account
-      description: Retrieve a list of all account in the wallet app, optionally filtered by account.
+      summary: Retrieve list of accounts
+      description: Retrieve a list of all accounts in the wallet app, optionally filtered by account.
       operationId: getAccounts
       responses:
         '200':
-          description: List of account retrieved successfully.
+          description: List of accounts retrieved successfully.
           content:
             application/json:
               schema:
@@ -137,7 +137,43 @@ paths:
           $ref: '#/components/responses/Response404'
         '500':
           $ref: '#/components/responses/Response500'
-
+  /update:
+    put:
+      tags:
+        - Accounts
+      summary: Update accounts
+      description: edit account items.
+      operationId: updateAccount
+      parameters:
+        - name: id 
+          in: path
+          description: Id that needs to be update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: modification successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/Response400'
+        '403':
+          $ref: '#/components/responses/Response403'
+        '500':
+          $ref: '#/components/responses/Response500'
+  
+  /create:
     post:
       tags:
         - Accounts
@@ -248,9 +284,10 @@ components:
           format: date
           description: The creation date of the account.
         bank_id:
-          type: integer
-          format: int64
+          allOf:
+            - $ref: "#/components/schemas/Bank"
           description: The ID of the bank associated with the account.
+    
     Transaction:
       type: object
       properties:
@@ -259,8 +296,8 @@ components:
           format: int64
           description: The unique identifier for the transaction.
         account_id:
-          type: integer
-          format: int64
+          allOf:
+            - $ref: "#/components/schemas/Account"
           description: The ID of the account associated with the transaction.
         amount:
           type: number
@@ -277,8 +314,8 @@ components:
           type: string
           description: The type of the transaction.
         category_id:
-          type: integer
-          format: int64
+          allOf:
+            - $ref: "#/components/schemas/Category"
           description: The ID of the category associated with the transaction.
         comment:
           type: string
@@ -291,8 +328,8 @@ components:
           format: int64
           description: The unique identifier for the transaction history.
         transaction_id:
-          type: integer
-          format: int64
+          allOf:
+            - $ref: "#/components/schemas/Transaction"
           description: The ID of the transaction associated with the history.
         operation_date:
           type: string
@@ -306,12 +343,12 @@ components:
           format: int64
           description: The unique identifier for the transfer.
         sender_account_id:
-          type: integer
-          format: int64
+          allOf:
+            - $ref: "#/components/schemas/Account"
           description: The ID of the sender account.
         receiver_account_id:
-          type: integer
-          format: int64
+          allOf:
+            - $ref: "#/components/schemas/Account"
           description: The ID of the receiver account.
         amount:
           type: number
@@ -346,8 +383,8 @@ components:
           format: int64
           description: The unique identifier for the interest.
         account_id:
-          type: integer
-          format: int64
+          allOf:
+            - $ref: "#/components/schemas/Account"
           description: The ID of the account associated with the interest.
         amount:
           type: number
