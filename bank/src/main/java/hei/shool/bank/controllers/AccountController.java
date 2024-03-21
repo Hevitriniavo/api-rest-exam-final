@@ -1,6 +1,7 @@
 package hei.shool.bank.controllers;
 
-import hei.shool.bank.dtos.requests.AccountRequest;
+import hei.shool.bank.dtos.requests.CreateAccountRequest;
+import hei.shool.bank.dtos.requests.UpdateAccountRequest;
 import hei.shool.bank.dtos.requests.OperationResult;
 import hei.shool.bank.dtos.responses.AccountResponse;
 import hei.shool.bank.services.AccountService;
@@ -25,9 +26,14 @@ public class AccountController {
         return accountService.findAll();
     }
 
-    @PostMapping
-    public AccountResponse createOrUpdateAccount(@RequestBody AccountRequest account){
-        return accountService.saveOrUpdate(account);
+    @PostMapping("/update")
+    public AccountResponse updateAccount(@RequestBody UpdateAccountRequest account){
+        return accountService.update(account);
+    }
+
+    @PutMapping("/create")
+    public AccountResponse createAccount(@RequestBody CreateAccountRequest account){
+        return accountService.create(account);
     }
 
     @GetMapping("/{id}")

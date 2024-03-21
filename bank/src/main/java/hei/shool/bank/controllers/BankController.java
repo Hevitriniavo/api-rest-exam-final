@@ -21,22 +21,22 @@ public class BankController {
 
 
     @GetMapping
-    public List<BankResponse> getAccounts(){
+    public List<BankResponse> getBanks(){
         return this.bankService.findAll();
     }
 
     @PostMapping
-    public BankResponse createOrUpdateAccount(@RequestBody BankRequest bankRequest){
+    public BankResponse createOrUpdateBank(@RequestBody BankRequest bankRequest){
         return this.bankService.saveOrUpdate(bankRequest);
     }
 
     @GetMapping("/{id}")
-    public BankResponse getAccount(@PathVariable Long id){
+    public BankResponse getBank(@PathVariable Long id){
         return this.bankService.findById(id);
     }
 
     @DeleteMapping("/{id}")
-    public BankResponse destroyAccount(@PathVariable Long id){
+    public BankResponse destroyBank(@PathVariable Long id){
         return this.bankService.deleteById(id);
     }
 }

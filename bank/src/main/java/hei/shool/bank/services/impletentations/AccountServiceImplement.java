@@ -1,6 +1,7 @@
 package hei.shool.bank.services.impletentations;
 
-import hei.shool.bank.dtos.requests.AccountRequest;
+import hei.shool.bank.dtos.requests.CreateAccountRequest;
+import hei.shool.bank.dtos.requests.UpdateAccountRequest;
 import hei.shool.bank.dtos.requests.OperationResult;
 import hei.shool.bank.dtos.responses.AccountResponse;
 import hei.shool.bank.entites.Account;
@@ -30,14 +31,31 @@ public class AccountServiceImplement implements AccountService {
 
 
     @Override
-    public AccountResponse saveOrUpdate(AccountRequest accountRequest) {
+    public AccountResponse create(CreateAccountRequest accountRequest)  {
         Account account = accountMapper.fromDTO(accountRequest);
         if (account.getId() == null){
             account.setCreationDate(LocalDate.now());
         }
-        account.setOverdraftLimit(account.getBalance().divide(BigDecimal.valueOf(3.00), 2, RoundingMode.HALF_UP));
+        account.setOverdraftLimit(account.getNetMonthlySalary().divide(BigDecimal.valueOf(3.00), 2, RoundingMode.HALF_UP));
         Account savedAccount = accountRepository.saveOrUpdate(account);
         return accountMapper.fromEntity(savedAccount);
+    }
+
+    @Override
+    public AccountResponse update(UpdateAccountRequest updateAccountRequest) {
+        Account savedAccount = accountRepository.findById(updateAccountRequest.id()).orElse(null);
+        if (savedAccount == null) {
+            return null;
+        }
+        savedAccount.setEmail(updateAccountRequest.email());
+        savedAccount.setPassword(updateAccountRequest.password());
+        savedAccount.setLastName(updateAccountRequest.lastName());
+        savedAccount.setFirstName(updateAccountRequest.firstName());
+        savedAccount.setBirthday(updateAccountRequest.birthday());
+        savedAccount.setOverdraftLimit(updateAccountRequest.netMonthlySalary().divide(BigDecimal.valueOf(3), 2, RoundingMode.HALF_UP));
+        savedAccount.setNetMonthlySalary(updateAccountRequest.netMonthlySalary());
+        Account updatedAccount = accountRepository.saveOrUpdate(savedAccount);
+        return accountMapper.fromEntity(updatedAccount);
     }
 
     @Override

@@ -1,12 +1,12 @@
 package hei.shool.bank.mappers;
 
-import hei.shool.bank.dtos.requests.AccountRequest;
+import hei.shool.bank.dtos.requests.CreateAccountRequest;
 import hei.shool.bank.dtos.responses.AccountResponse;
 import hei.shool.bank.entites.Account;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AccountMapper implements Mapper<Account, AccountRequest, AccountResponse> {
+public class AccountMapper implements Mapper<Account, CreateAccountRequest, AccountResponse> {
     @Override
     public AccountResponse fromEntity(Account entity) {
         return new AccountResponse(
@@ -26,9 +26,8 @@ public class AccountMapper implements Mapper<Account, AccountRequest, AccountRes
     }
 
     @Override
-    public Account fromDTO(AccountRequest dto) {
+    public Account fromDTO(CreateAccountRequest dto) {
         Account account = new Account();
-        account.setId(dto.id());
         account.setPassword(dto.password());
         account.setLastName(dto.lastName());
         account.setFirstName(dto.firstName());

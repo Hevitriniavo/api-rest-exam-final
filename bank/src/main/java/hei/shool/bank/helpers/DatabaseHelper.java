@@ -77,7 +77,6 @@ public class DatabaseHelper {
                 .collect(Collectors.joining(""));
     }
 
-
     private <T> String getValues(Class<T> entityClass){
         StringBuilder values = new StringBuilder();
         for (Field field : entityClass.getDeclaredFields()) {

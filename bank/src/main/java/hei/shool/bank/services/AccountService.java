@@ -1,14 +1,16 @@
 package hei.shool.bank.services;
 
 
-import hei.shool.bank.dtos.requests.AccountRequest;
+import hei.shool.bank.dtos.requests.CreateAccountRequest;
+import hei.shool.bank.dtos.requests.UpdateAccountRequest;
 import hei.shool.bank.dtos.requests.OperationResult;
 import hei.shool.bank.dtos.responses.AccountResponse;
 
 import java.util.List;
 
 public interface AccountService {
-    AccountResponse saveOrUpdate(AccountRequest account);
+    AccountResponse update(UpdateAccountRequest account);
+    AccountResponse create(CreateAccountRequest account);
 
     List<AccountResponse> findAll();
 
