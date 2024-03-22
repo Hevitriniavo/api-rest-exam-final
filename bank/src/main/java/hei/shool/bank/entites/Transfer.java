@@ -39,9 +39,6 @@ public class Transfer implements Identifiable<Long> {
 
     private String reference;
 
-    private LocalDateTime cancelledDate;
-
-
     @Override
     public void setId(Long id) {
         this.id = id;
