@@ -4,7 +4,7 @@ info:
   version: "1.0"
   description: API for managing banking operations for a digital bank. STD22036 & STD22047 & STD22086
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:8080
 
 tags:
   - name: Banks
@@ -34,13 +34,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/Bank'
         '400':
-          $ref: '#/components/responses/Response400'
+          description: Bad request
         '403':
-          $ref: '#/components/responses/Response403'
+          description: Forbidden
         '404':
-          $ref: '#/components/responses/Response404'
+          description: bank not found
         '500':
-          $ref: '#/components/responses/Response500'
+          description: Internal server error
 
     post:
       tags:
@@ -63,9 +63,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Bank'
         '400':
-          $ref: '#/components/responses/Response400'
+          description: Bad request
         '500':
-          $ref: '#/components/responses/Response500'
+          description: Internal server error
     
 
   /banks/{id}:
@@ -75,6 +75,13 @@ paths:
       summary: Retrieve one of banks by id
       description: Retrieve only one of all banks in the wallet app, optionally filtered by bank.
       operationId: getBank
+      parameters:
+        - name: id 
+          in: path
+          description: The id that needs to be retrieved
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: id of banks retrieved successfully.
@@ -85,13 +92,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/Bank'
         '400':
-          $ref: '#/components/responses/Response400'
+          description: Bad request
         '403':
-          $ref: '#/components/responses/Response403'
+          description: Forbidden
         '404':
-          $ref: '#/components/responses/Response404'
+          description: bank not found
         '500':
-          $ref: '#/components/responses/Response500'
+          description: Internal server error
+      
     
     delete:
       tags:
@@ -115,10 +123,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Bank'
-        '400':
-          $ref: '#/components/responses/Response400'
         '404':
-          $ref: '#/components/responses/Response404'
+          description: bank not found
+        '500':
+          description: Internal server error
+        
     
     # the end of the path bank
 
@@ -141,13 +150,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
         '400':
-          $ref: '#/components/responses/Response400'
+          description: Bad request
         '403':
-          $ref: '#/components/responses/Response403'
+          description: Forbidden
         '404':
-          $ref: '#/components/responses/Response404'
+          description: Account not found
         '500':
-          $ref: '#/components/responses/Response500'
+          description: Internal server error
   
   /accounts/create:
     post:
@@ -171,9 +180,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
         '400':
-          $ref: '#/components/responses/Response400'
+          description: Bad request
         '500':
-          $ref: '#/components/responses/Response500'
+          description: Internal server error
   
   /accounts/update:
     put:
@@ -205,13 +214,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
         '400':
-          $ref: '#/components/responses/Response400'
-        '403':
-          $ref: '#/components/responses/Response403'
+          description: Invalid account supplied
         '404':
-          $ref: '#/components/responses/Response404'
-        '500':
-          $ref: '#/components/responses/Response500'
+          description: account not found
+        '500': 
+          description:  Internal server error
 
   /accounts/{accountId}/overdraft:
     put:
@@ -221,7 +228,7 @@ paths:
       description: edit account items.
       operationId: toggleOverdraft
       parameters:
-        - name: id 
+        - name: accountId
           in: path
           description: Id that needs to be update
           required: true
@@ -243,15 +250,10 @@ paths:
                 example:
                   message: "thanks for borrowing the balance"
                   properties: false
-
-        '400':
-          $ref: '#/components/responses/Response400'
-        '403':
-          $ref: '#/components/responses/Response403'
         '404':
-          $ref: '#/components/responses/Response404'
-        '500':
-          $ref: '#/components/responses/Response500'
+          description: accountId not found
+        '403': 
+          description: Forbidden
 
   /accounts/{id}:
     get:
@@ -260,6 +262,13 @@ paths:
       summary: Retrieve one of accounts by id
       description: Retrieve only one of all accounts in the wallet app, optionally filtered by account.
       operationId: getAccount
+      parameters:
+        - name: id 
+          in: path
+          description: The id that needs to be retrieved
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: One of accounts retrieved successfully.
@@ -270,13 +279,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
         '400':
-          $ref: '#/components/responses/Response400'
-        '403':
-          $ref: '#/components/responses/Response403'
+          description: Invalid id supplied
         '404':
-          $ref: '#/components/responses/Response404'
-        '500':
-          $ref: '#/components/responses/Response500'
+          description: Account not found
+       
     delete:
       tags:
         - Accounts
@@ -300,9 +306,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
         '400':
-          $ref: '#/components/responses/Response400'
+          description: Invalid id supplied
         '404':
-          $ref: '#/components/responses/Response404'
+          description: Account not found
+       
 
      # the end of the path account
 
@@ -329,11 +336,11 @@ paths:
                 example:
                   message: "thanks you for credit"
                   properties: false
-                
         '400':
-          $ref: '#/components/responses/Response400'
+          description: Bad Request
         '500':
-          $ref: '#/components/responses/Response500'
+          description: Internal server error
+                
 
   /transactions/debit:
     post:
@@ -357,11 +364,10 @@ paths:
                 example:
                   message: "thanks you for debit"
                   properties: false
-                
         '400':
-          $ref: '#/components/responses/Response400'
+          description: Bad Request
         '500':
-          $ref: '#/components/responses/Response500'
+          description: Internal server error       
 
   
      # the end of the path transaction
@@ -375,6 +381,13 @@ paths:
       summary: Retrieve one of balance by id
       description: Retrieve only one of all balances in the wallet app, optionally filtered by balance.
       operationId: getConsultBalance
+      parameters:
+        - name: accountId
+          in: path
+          description: The id that needs to be retrieved
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: id of balance retrieved successfully.
@@ -385,23 +398,17 @@ paths:
                 items:
                   $ref: '#/components/schemas/Balance'
         '400':
-          $ref: '#/components/responses/Response400'
-        '403':
-          $ref: '#/components/responses/Response403'
+          description: Bad Request
         '404':
-          $ref: '#/components/responses/Response404'
+          description: balance not found
         '500':
-          $ref: '#/components/responses/Response500'
+          description: Internal server error
 
 components:
   schemas:
     Bank:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: The unique identifier for the bank.
         name:
           type: string
           description: The name of the bank.
@@ -418,10 +425,6 @@ components:
     Category:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: The unique identifier for the category.
         name:
           type: string
           description: The name of the category.
@@ -434,10 +437,6 @@ components:
     Account:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: The unique identifier for the account.
         password:
           type: string
           description: The password of the account.
@@ -463,29 +462,11 @@ components:
           type: number
           format: float
           description: The net monthly salary of the account holder.
-        account_number:
-          type: string
-          description: The account number.
-        overdraft_limit:
-          type: number
-          format: float
-          description: The overdraft limit of the account.
-        overdraft_enabled:
-          type: boolean
-          description: Indicates if overdraft is enabled for the account.
-        creation_date:
-          type: string
-          format: date
-          description: The creation date of the account.
-       
+        
        
     Transaction:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: The unique identifier for the transaction.
         account_id:
           allOf:
             - $ref: "#/components/schemas/Account"
@@ -514,10 +495,6 @@ components:
     TransactionHistory:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: The unique identifier for the transaction history.
         transaction_id:
           allOf:
             - $ref: "#/components/schemas/Transaction"
@@ -529,10 +506,6 @@ components:
     Transfer:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: The unique identifier for the transfer.
         sender_account_id:
           allOf:
             - $ref: "#/components/schemas/Account"
@@ -569,10 +542,6 @@ components:
     Interest:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: The unique identifier for the interest.
         account_id:
           allOf:
             - $ref: "#/components/schemas/Account"
@@ -593,10 +562,6 @@ components:
     Balance:
       type: object
       properties:
-        id: 
-          type: integer
-          format: int64
-          description: The unique identifier for the balance.
         principalBalance:
           type: number
           format: double
@@ -607,40 +572,4 @@ components:
           type: number
           format: double
 
-  responses:
-    Response400:
-      description: Bad Request
-      content:
-        application/json:
-          example:
-            statusCode: 400
-            message: "Bad Request"
-            property: "Value of the property in the response body"
-
-    Response403:
-      description: Forbidden
-      content:
-        application/json:
-          example:
-            statusCode: 403
-            message: "Forbidden"
-            property: "Value of the property in the response body"
-
-    Response404:
-      description: Not Found
-      content:
-        application/json:
-          example:
-            statusCode: 404
-            message: "Not Found"
-            property: "Value of the property in the response body"
-
-
-    Response500:
-      description: Internal Server Error
-      content:
-        application/json:
-          example:
-            statusCode: 500
-            message: "Internal Server Error"
-            property: "Value of the property in the response body"
+  
