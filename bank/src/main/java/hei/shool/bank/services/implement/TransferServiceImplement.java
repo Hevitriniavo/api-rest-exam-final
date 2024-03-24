@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -27,6 +26,10 @@ public class TransferServiceImplement implements TransferService {
         Account senderAccount = getSenderAccount(request.senderAccountNumber());
         Account receiverAccount = getReceiverAccount(request.receiverAccountNumber());
 
+        if (senderAccount == null || receiverAccount == null) {
+            return generateFailureResponse("Compte émetteur ou destinataire non trouvé");
+        }
+
         BigDecimal amount = request.amount();
         BigDecimal senderBalance = senderAccount.getBalance();
 
@@ -34,7 +37,7 @@ public class TransferServiceImplement implements TransferService {
             performTransfer(senderAccount, receiverAccount, amount, request.description());
             return generateSuccessResponse();
         } else {
-            return generateFailureResponse();
+            return generateFailureResponse("Solde insuffisant pour effectuer le transfert");
         }
     }
 
@@ -87,7 +90,7 @@ public class TransferServiceImplement implements TransferService {
         return new TransferResponse(true, "Transfert réussi");
     }
 
-    private TransferResponse generateFailureResponse() {
-        return new TransferResponse(false, "Solde insuffisant pour effectuer le transfert");
+    private TransferResponse generateFailureResponse(String message) {
+        return new TransferResponse(false, message);
     }
 }
