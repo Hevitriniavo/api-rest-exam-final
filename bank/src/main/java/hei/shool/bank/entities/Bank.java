@@ -1,5 +1,7 @@
 package hei.shool.bank.entities;
 
+import hei.shool.bank.annotations.GeneratedValue;
+import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
@@ -12,6 +14,8 @@ import lombok.*;
 @Builder
 public class Bank implements Identifiable<Long> {
 
+    @Id
+    @GeneratedValue
     private Long id;
 
     private String name;

@@ -17,6 +17,19 @@ CREATE TABLE IF NOT EXISTS categories (
     type VARCHAR(50) NOT NULL CHECK (type IN ('ENTREE', 'SORTIE'))
 );
 
+
+CREATE TABLE IF NOT EXISTS bank_solds (
+    id BIGSERIAL PRIMARY KEY,
+    value DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS history_bank_solds (
+    id BIGSERIAL PRIMARY KEY,
+    value DECIMAL(10, 2) NOT NULL,
+    bank_sold_date DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+
 CREATE TABLE IF NOT EXISTS accounts (
     id BIGSERIAL PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
@@ -116,16 +129,6 @@ CREATE TABLE IF NOT EXISTS loan_not_valid (
     loans_date DATE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS bank_solds (
-    id BIGSERIAL PRIMARY KEY,
-    value DECIMAL(10, 2) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS history_bank_solds (
-    id BIGSERIAL PRIMARY KEY,
-    value DECIMAL(10, 2) NOT NULL,
-    bank_sold_date DATE NOT NULL DEFAULT CURRENT_DATE
-);
 
 CREATE SEQUENCE account_id_seq;
 
