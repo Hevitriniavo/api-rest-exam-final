@@ -47,6 +47,38 @@ paths:
           description: bank not found
         '500':
           description: Internal server error
+
+  /banks/paginate:
+    get:
+      tags:
+        - Banks
+      summary: Retrieve one of banks by Paginated
+      description: Retrieve only one paginated of all banks in the wallet app, optionally filtered by bank.
+      operationId: getBanksPaginated
+      parameters:
+        - name: Banks paginated
+          in: path
+          description: The banks paginated that needs to be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Banks paginated of banks retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Banks paginatednot found
+        '500':
+          description: Internal server error
   
   /banks/create:
     post:
@@ -78,22 +110,16 @@ paths:
     put:
       tags:
         - Banks
-      summary: Update banks
-      description: edit bank items.
+      summary: Update an existing banks
+      description: edit an existing bank by id.
       operationId: updateBank
-      parameters:
-        - name: id 
-          in: path
-          description: Id that needs to be update
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Update an existent bank
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Bank'
+        required: true
       responses:
         '200':
           description: modification successful
@@ -179,13 +205,17 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the bank.
         name:
           type: string
+          description: The name of the bank.
         code:
           type: string
+          description: The bank's code.
         email:
           type: string
           format: email
+          description: The email address of the bank.
 
     Category:
       type: object
@@ -193,13 +223,16 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the category.
         name:
           type: string
+          description: The name of the category.
         type:
           type: string
           enum:
-            - ENTREE
-            - SORTIE
+            - INCOME
+            - EXPENSE
+          description: The type of category, whether it's income or expense.
 
     BankSold:
       type: object
@@ -207,9 +240,11 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the bank balance.
         value:
           type: number
           format: float
+          description: The value of the bank balance.
 
     HistoryBankSold:
       type: object
@@ -217,12 +252,15 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the bank balance history.
         value:
           type: number
           format: float
+          description: The value of the bank balance.
         bank_sold_date:
           type: string
           format: date
+          description: The date of the bank balance.
 
     Account:
       type: object
@@ -230,37 +268,50 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the account.
         password:
           type: string
+          description: The password of the account.
         last_name:
           type: string
+          description: The last name of the account holder.
         first_name:
           type: string
+          description: The first name of the account holder.
         email:
           type: string
           format: email
+          description: The email address of the account holder.
         birthday:
           type: string
           format: date
+          description: The birthday of the account holder.
         balance:
           type: number
           format: float
+          description: The current balance of the account.
         net_monthly_salary:
           type: number
           format: float
+          description: The net monthly salary of the account holder.
         account_number:
           type: string
+          description: The account number.
         overdraft_enabled:
           type: boolean
+          description: Indicates if overdraft is enabled for the account.
         creation_date:
           type: string
           format: date
+          description: The date when the account was created.
         last_withdrawal_date:
           type: string
           format: date
+          description: The date of the last withdrawal.
         bank_solds_id:
           type: integer
           format: int64
+          description: Reference to the bank balance.
 
     Transaction:
       type: object
@@ -268,21 +319,28 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the transaction.
         account_id:
           type: integer
           format: int64
+          description: The account associated with the transaction.
         amount:
           type: number
           format: float
+          description: The amount of the transaction.
         reason:
           type: string
+          description: The reason for the transaction.
         transaction_type:
           type: string
+          description: The type of transaction.
         category_id:
           type: integer
           format: int64
+          description: The category associated with the transaction.
         comment:
           type: string
+          description: Additional comment for the transaction.
 
     TransactionHistory:
       type: object
@@ -290,12 +348,15 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the transaction history.
         transaction_id:
           type: integer
           format: int64
+          description: The transaction associated with the history.
         operation_date:
           type: string
           format: date-time
+          description: The date and time of the operation.
 
     Transfer:
       type: object
@@ -303,27 +364,36 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the transfer.
         sender_account_id:
           type: integer
           format: int64
+          description: The account ID of the sender.
         receiver_account_id:
           type: integer
           format: int64
+          description: The account ID of the receiver.
         bank_id:
           type: integer
           format: int64
+          description: The bank associated with the transfer.
         amount:
           type: number
           format: float
+          description: The amount of the transfer.
         reason:
           type: string
+          description: The reason for the transfer.
         effective_date:
           type: string
           format: date-time
+          description: The effective date of the transfer.
         status:
           type: string
+          description: The status of the transfer.
         reference:
           type: string
+          description: The reference of the transfer.
 
     InterestValid:
       type: object
@@ -331,18 +401,23 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the valid interest.
         account_id:
           type: integer
           format: int64
+          description: The account associated with the interest.
         amount:
           type: number
           format: float
+          description: The amount of the interest.
         interest_rate:
           type: number
           format: float
+          description: The interest rate.
         interest_date:
           type: string
           format: date
+          description: The date of the interest.
 
     HistoryInterest:
       type: object
@@ -350,18 +425,23 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the interest history.
         account_id:
           type: integer
           format: int64
+          description: The account associated with the interest history.
         amount:
           type: number
           format: float
+          description: The amount of the interest.
         interest_rate:
           type: number
           format: float
+          description: The interest rate.
         interest_date:
           type: string
           format: date
+          description: The date of the interest.
 
     InterestNotValid:
       type: object
@@ -369,18 +449,23 @@ components:
         id:
           type: integer
           format: int64
+          description: Unique identifier for the invalid interest.
         account_id:
           type: integer
           format: int64
+          description: The account associated with the invalid interest.
         amount:
           type: number
           format: float
+          description: The amount of the invalid interest.
         interest_rate:
           type: number
           format: float
+          description: The interest rate.
         interest_date:
           type: string
           format: date
+          description: The date of the invalid interest.
 
     LoanValid:
       type: object
@@ -388,20 +473,25 @@ components:
         id:
           type: integer
           format: int64
+          description: "Unique identifier for the loan."
         account_id:
           type: integer
           format: int64
+          description: "ID of the account associated with the loan."
         amount:
           type: number
           format: float
+          description: "The amount of the loan."
         loans_date:
           type: string
           format: date
+          description: "Date when the loan was issued."
         status:
           type: integer
           enum:
             - 0
             - 100
+          description: "Status of the loan (0 for active, 100 for closed)."
 
     HistoryLoan:
       type: object
@@ -409,20 +499,25 @@ components:
         id:
           type: integer
           format: int64
+          description: "Unique identifier for the historical loan record."
         account_id:
           type: integer
           format: int64
+          description: "ID of the account associated with the historical loan record."
         amount:
           type: number
           format: float
+          description: "The amount of the loan."
         loans_date:
           type: string
           format: date
+          description: "Date when the loan was issued."
         status:
           type: integer
           enum:
             - 0
             - 100
+          description: "Status of the loan (0 for active, 100 for closed)."
 
     LoanNotValid:
       type: object
@@ -430,15 +525,19 @@ components:
         id:
           type: integer
           format: int64
+          description: "Unique identifier for the invalid loan."
         account_id:
           type: integer
           format: int64
+          description: "ID of the account associated with the invalid loan."
         amount:
           type: number
           format: float
+          description: "The amount of the invalid loan."
         loans_date:
           type: string
           format: date
+          description: "Date when the invalid loan was issued."
 
 
   
