@@ -47,6 +47,8 @@ CREATE TABLE IF NOT EXISTS accounts (
     bank_sold_id BIGINT NULL REFERENCES bank_solds(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+SELECT t.*, a.* FROM transactions t INNER JOIN accounts a ON t.account_id = a.id WHERE t.account_id = 2 LIMIT 1;
+
 CREATE TABLE IF NOT EXISTS transactions (
     id BIGSERIAL PRIMARY KEY,
     account_id BIGINT REFERENCES accounts(id),

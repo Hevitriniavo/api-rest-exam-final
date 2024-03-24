@@ -3,6 +3,7 @@ package hei.shool.bank.helpers;
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -125,5 +126,28 @@ public class DatabaseHelper {
     public <T> String getQueryCount(Class<T> entityClass) {
         return  "SELECT COUNT(*) FROM " + toSnackCase(getClassName(entityClass));
     }
+
+    public <T> String getPaginateQuery() {
+        return  "SELECT t.*, a.* FROM transactions t " +
+                "INNER JOIN accounts a ON t.account_id = a.id " +
+                "WHERE t.account_id = ? ORDER BY t.id LIMIT ? OFFSET ?";
+    }
+
+    public String getQueryByAccountId() {
+        return "SELECT t.*, a.* FROM transactions t " +
+                "INNER JOIN accounts a ON t.account_id = a.id " +
+                "WHERE t.account_id = ?";
+    }
+
+    public String getQueryCountTransactions() {
+        return "SELECT COUNT(*) AS total_count FROM transactions WHERE account_id = ?";
+    }
+
+    public String getCountQuery() {
+        return "SELECT COUNT(*) FROM transactions t " +
+                "INNER JOIN accounts a ON t.account_id = a.id " +
+                "WHERE t.account_id = ?";
+    }
+
 }
 

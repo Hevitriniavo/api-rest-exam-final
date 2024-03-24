@@ -196,9 +196,8 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
 
         long totalRowCount = getTotalRowCount();
         int totalPages = (int) Math.ceil((double) totalRowCount / pageSize);
-        Long nextPage = (pageNumber < totalPages) ? pageNumber + 1 : -1;
-        Long previousPage = (pageNumber > 1) ? pageNumber - 1 : -1;
-
+        Long nextPage = (pageNumber < totalPages) ? pageNumber + 1 : null;
+        Long previousPage = (pageNumber > 1) ? pageNumber - 1 : null;
         return new Paginate<>(totalRowCount, nextPage, previousPage, resultList);
     }
 

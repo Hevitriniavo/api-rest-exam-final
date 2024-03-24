@@ -36,12 +36,24 @@ public class AccountServiceImplement implements AccountService {
     @Override
     public AccountResponse createOrUpdate(AccountRequest accountRequest) {
         Account account = accountMapper.toEntity(accountRequest);
-        if (account.getId() == null){
-            account.setCreationDate(LocalDate.now());
+        if (account.getId() != null) {
+            Account savedAccount = accountRepository.findById(account.getId()).orElse(null);
+            if (savedAccount != null) {
+                savedAccount.setPassword(account.getPassword());
+                savedAccount.setLastName(account.getLastName());
+                savedAccount.setFirstName(account.getFirstName());
+                savedAccount.setEmail(account.getEmail());
+                savedAccount.setBirthday(account.getBirthday());
+                savedAccount.setNetMonthlySalary(account.getNetMonthlySalary());
+                savedAccount = accountRepository.saveOrUpdate(savedAccount);
+                return accountMapper.toResponse(savedAccount);
+            }
         }
-        account = accountRepository.saveOrUpdate(account);
-        return accountMapper.toResponse(account);
+        account.setCreationDate(LocalDate.now());
+        Account savedAccount = accountRepository.saveOrUpdate(account);
+        return accountMapper.toResponse(savedAccount);
     }
+
 
     @Override
     public PaginateAccountResponse paginate(Long pageNumber, Long pageSize) {

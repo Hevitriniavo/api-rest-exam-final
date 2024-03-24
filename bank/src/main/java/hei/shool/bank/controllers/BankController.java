@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/banks")
+@CrossOrigin
 @RequiredArgsConstructor
 public class BankController {
 
