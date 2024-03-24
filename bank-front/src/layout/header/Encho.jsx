@@ -28,10 +28,7 @@ function ResponsiveAppBar(props) {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleProfile = () => {
-    navigate("/profil");
-    setAnchorElUser(null);
-  };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -83,8 +80,7 @@ function ResponsiveAppBar(props) {
           onClick={handleOpenUserMenu}
           avatar={
             <Avatar
-              alt=// {userFront?.first_name}
-              "N"
+              alt={userFront?.first_name}
               src="/broken-image.jpg"
               style={{ width: "5vh", height: "5vh" }}
             />
@@ -125,12 +121,11 @@ function ResponsiveAppBar(props) {
               variant="body1"
               fontWeight={"bold"}
             >
-              {/* {userFront?.username} */}Nom d'user
+              {userFront?.firstName.toUpperCase()}
             </Typography>
 
             <Button
               sx={{ color: "#5a189a" }}
-              onClick={handleProfile}
               startIcon={<AccountCircleIcon />}
             >
               Profile

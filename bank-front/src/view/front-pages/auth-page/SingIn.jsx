@@ -14,6 +14,8 @@ import axios from "axios";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { UrlSite } from "../../../utils";
 import StateNotification from "../../../component/Common/StateNotification";
+import { useAuthTemp } from "../../../utils/auth";
+import { useNavigate } from "react-router-dom";
 const validationSchema = yup.object({
   email: yup
     .string("Veuillez entrer votre adresse e-mail")
@@ -44,7 +46,9 @@ const useStyles = makeStyles({
   },
 });
 function SingIn(props) {
+  const auth = useAuthTemp();
   const classes = useStyles();
+  const navigate = useNavigate();
   const isChecked = props.checked;
   const setLoading = props.load;
   const [showErrorDialog, setShowErrorDialog] = useState(false);
@@ -64,7 +68,7 @@ function SingIn(props) {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: UrlSite("users-front/login"),
+      url: UrlSite("accounts/login"),
       headers: {
         "Content-Type": "application/json",
       },
@@ -76,11 +80,11 @@ function SingIn(props) {
       .then((response) => {
         console.log("anaty try");
         console.log(response);
-        // auth.loginUserFront(response.data.items);
+        auth.loginUserFront(response.data);
         // setLoad(false);
         setLoading(false);
         // setShowSuccessDialog(true);
-        // navigate("/");
+        navigate("/");
       })
       .catch((error) => {
         console.log("anaty catch");

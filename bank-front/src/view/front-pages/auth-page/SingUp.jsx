@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import StateNotification from "../../../component/Common/StateNotification";
 import Waiter from "../../../component/Common/Waiter";
 import { UrlSite } from "../../../utils";
+import { useAuthTemp } from "../../../utils/auth";
 const useStyles = makeStyles({
   textField: {
     // width: "100%",
@@ -43,9 +44,9 @@ const validationSchema = yup.object({
   lastName: yup
     .string("Veuillez entrer votre nprénom")
     .required("Le prénom est obligatoire"),
-  userName: yup
-    .string("Veuillez entrer votre nom d'utilisateur")
-    .required("Le nom d'utilisateur est obligatoire"),
+  netMonthlySalary: yup
+    .number("Veuillez entrer votre salaire mensuelle")
+    .required("La salaire mensuelle est obligatoire"),
   dateDeN: yup
     .date("Format de date invalide")
     .required("La date de naissance est obligatoire"),
@@ -66,6 +67,7 @@ const validationSchema = yup.object({
     .required("Veuillez confirmer votre mot de passe"),
 });
 function SlideNavbar() {
+  const auth = useAuthTemp();
   const [isChecked, setIsChecked] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -79,7 +81,8 @@ function SlideNavbar() {
 
     formData.append("firstName", values.firstName);
     formData.append("lastName", values.lastName);
-    formData.append("username", values.userName);
+    formData.append("netMonthlySalary", values.netMonthlySalary);
+    formData.append("balance", 0);
     formData.append("birthday", values.dateDeN);
     formData.append("email", values.email);
     formData.append("password", values.password);
@@ -93,7 +96,7 @@ function SlideNavbar() {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url:UrlSite("users"),
+      url: UrlSite("accounts/create"),
       headers: {
         "Content-Type": "application/json",
       },
@@ -105,7 +108,7 @@ function SlideNavbar() {
       .then((response) => {
         console.log("anaty try");
         console.log(response);
-        // auth.loginUserFront(response.data.items);
+        auth.loginUserFront(response.data);
         // setLoad(false);
         setLoading(false);
         setShowSuccessDialog(true);
@@ -124,10 +127,10 @@ function SlideNavbar() {
       lastName: "",
       firstName: "",
       email: "",
-      userName: "",
       dateDeN: "",
       password: "",
       ConfirmPassword: "",
+      netMonthlySalary: "",
       showPassword: false,
       showConfirmPassword: false,
     },
@@ -140,7 +143,7 @@ function SlideNavbar() {
   });
   const handleCloseSuccessDialog = () => {
     setShowSuccessDialog(false);
-    // navigate('/');
+    navigate('/');
   };
 
   const handleCloseErrorDialog = () => {
@@ -288,23 +291,25 @@ function SlideNavbar() {
               >
                 <Box borderRadius={1} width={"70%"}>
                   <TextField
-                    label="Nom d'utilisateur"
+                    label="Salaire mensuelle"
                     className={classes.textField}
                     fullWidth
                     variant="outlined"
                     color="secondary"
                     sx={{ bgcolor: "white", borderRadius: 1, zIndex: 0 }}
                     size="small"
-                    id="userName"
-                    name="userName"
-                    value={formik.values.userName}
+                    id="netMonthlySalary"
+                    name="netMonthlySalary"
+                    value={formik.values.netMonthlySalary}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={
-                      formik.touched.userName && Boolean(formik.errors.userName)
+                      formik.touched.netMonthlySalary &&
+                      Boolean(formik.errors.netMonthlySalary)
                     }
                     helperText={
-                      formik.touched.userName && formik.errors.userName
+                      formik.touched.netMonthlySalary &&
+                      formik.errors.netMonthlySalary
                     }
                   />
                 </Box>
