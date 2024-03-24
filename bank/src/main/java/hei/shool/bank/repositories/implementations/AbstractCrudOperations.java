@@ -5,6 +5,7 @@ package hei.shool.bank.repositories.implementations;
 
 import hei.shool.bank.annotations.Id;
 import hei.shool.bank.helpers.DatabaseHelper;
+import hei.shool.bank.helpers.Paginate;
 import hei.shool.bank.repositories.CrudOperations;
 import hei.shool.bank.repositories.Identifiable;
 import org.springframework.stereotype.Repository;
@@ -148,20 +149,18 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
 
 
     @Override
-    public List<T> findByField(String column, String value) {
+    public Optional<T> findByField(String column, String value) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<T> resultList = new ArrayList<>();
-
         try {
             String query = databaseHelper.querySelectByFieldName(entityClass, column);
             stmt = connection.prepareStatement(query);
             stmt.setString(1, value);
             rs = stmt.executeQuery();
 
-            while (rs.next()) {
+            if (rs.next()) {
                 T entity = mapResultSetToEntity(rs);
-                resultList.add(entity);
+                return Optional.of(entity);
             }
         } catch (SQLException e) {
             System.out.println("Error while executing findByField operation "+ e);
@@ -169,7 +168,59 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
             databaseHelper.closeResources(stmt, rs);
         }
 
-        return resultList;
+        return Optional.empty();
+    }
+
+    @Override
+    public Paginate<T> pagination(Long pageNumber, Long pageSize) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<T> resultList = new ArrayList<>();
+
+        try {
+            String query = databaseHelper.querySelectAll(entityClass) + " LIMIT ? OFFSET ?";
+            stmt = connection.prepareStatement(query);
+            stmt.setLong(1, pageSize);
+            stmt.setLong(2, (pageNumber - 1) * pageSize);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                T entity = this.mapResultSetToEntity(rs);
+                resultList.add(entity);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while executing pagination operation", e);
+        } finally {
+            databaseHelper.closeResources(stmt, rs);
+        }
+
+        long totalRowCount = getTotalRowCount();
+        int totalPages = (int) Math.ceil((double) totalRowCount / pageSize);
+        Long nextPage = (pageNumber < totalPages) ? pageNumber + 1 : -1;
+        Long previousPage = (pageNumber > 1) ? pageNumber - 1 : -1;
+
+        return new Paginate<>(totalRowCount, nextPage, previousPage, resultList);
+    }
+
+
+
+    @Override
+    public Long getTotalRowCount() {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            String query = databaseHelper.getQueryCount(entityClass);
+            stmt = connection.prepareStatement(query);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
+            return 0L;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while executing getTotalRowCount operation", e);
+        } finally {
+            databaseHelper.closeResources(stmt, rs);
+        }
     }
 
 
@@ -180,8 +231,6 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
                 throw new RuntimeException(e);
             }
     }
-
-
 
     private void setParameters(PreparedStatement stmt, T toSave, boolean isInsert) {
         int index = 1;

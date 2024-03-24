@@ -2,6 +2,7 @@ package hei.shool.bank.helpers;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
+import hei.shool.bank.repositories.Identifiable;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -21,7 +22,7 @@ public class DatabaseHelper {
         return String.format("SELECT %s FROM %s WHERE %s = ?", getColumns(entityClass, true), getClassName(entityClass), this.getIdentifyName(entityClass));
     }
     public <T> String querySelectByFieldName(Class<T> entityClass, String column) {
-        return String.format("SELECT %s FROM %s WHERE %s = ?", getColumns(entityClass, true), getClassName(entityClass), this.toSnackCase(column));
+        return String.format("SELECT %s FROM %s WHERE %s = ? LIMIT 1", getColumns(entityClass, true), getClassName(entityClass), this.toSnackCase(column));
     }
 
     public <T> String queryInsert(Class<T> entityClass) {
@@ -119,6 +120,10 @@ public class DatabaseHelper {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to close resources", e);
         }
+    }
+
+    public <T> String getQueryCount(Class<T> entityClass) {
+        return  "SELECT COUNT(*) FROM " + toSnackCase(getClassName(entityClass));
     }
 }
 

@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS transfers (
     reference VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS interests (
+CREATE TABLE IF NOT EXISTS interest_valid (
     id BIGSERIAL PRIMARY KEY,
     account_id BIGINT REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
@@ -69,7 +69,23 @@ CREATE TABLE IF NOT EXISTS interests (
     interest_date DATE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS loans (
+CREATE TABLE IF NOT EXISTS history_interests (
+    id BIGSERIAL PRIMARY KEY,
+    account_id BIGINT REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    amount DECIMAL(10, 2) NOT NULL,
+    interest_rate DECIMAL(10, 2) NOT NULL,
+    interest_date DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS interest_not_valid (
+    id BIGSERIAL PRIMARY KEY,
+    account_id BIGINT REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    amount DECIMAL(10, 2) NOT NULL,
+    interest_rate DECIMAL(10, 2) NOT NULL,
+    interest_date DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS loan_valid (
     id BIGSERIAL PRIMARY KEY,
     account_id BIGINT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
@@ -77,10 +93,38 @@ CREATE TABLE IF NOT EXISTS loans (
     status INT NOT NULL CHECK (status IN (0, 100))
 );
 
+CREATE TABLE IF NOT EXISTS loan_valid (
+    id BIGSERIAL PRIMARY KEY,
+    account_id BIGINT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    amount DECIMAL(10, 2) NOT NULL,
+    loans_date DATE NOT NULL,
+    status INT NOT NULL CHECK (status IN (0, 100))
+);
+
+CREATE TABLE IF NOT EXISTS History_loans (
+    id BIGSERIAL PRIMARY KEY,
+    account_id BIGINT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    amount DECIMAL(10, 2) NOT NULL,
+    loans_date DATE NOT NULL,
+    status INT NOT NULL CHECK (status IN (0, 100))
+);
+
+CREATE TABLE IF NOT EXISTS loan_not_valid (
+    id BIGSERIAL PRIMARY KEY,
+    account_id BIGINT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    amount DECIMAL(10, 2) NOT NULL,
+    loans_date DATE NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS bank_solds (
     id BIGSERIAL PRIMARY KEY,
     value DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS history_bank_solds (
+    id BIGSERIAL PRIMARY KEY,
+    value DECIMAL(10, 2) NOT NULL,
+    bank_sold_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE SEQUENCE account_id_seq;
@@ -98,6 +142,7 @@ CREATE TRIGGER account_number_trigger
     BEFORE INSERT ON accounts
     FOR EACH ROW
     EXECUTE FUNCTION generate_account_number();
+
 
 CREATE OR REPLACE FUNCTION generate_transfer_reference() RETURNS TRIGGER AS $$
 BEGIN

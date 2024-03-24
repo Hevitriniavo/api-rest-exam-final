@@ -1,42 +1,16 @@
 package hei.shool.bank.controllers;
 
-import hei.shool.bank.dtos.requests.BankRequest;
-import hei.shool.bank.dtos.responses.BankResponse;
 import hei.shool.bank.services.BankService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/banks")
+@RequestMapping("/bank")
+@RequiredArgsConstructor
 public class BankController {
+    private BankService bankService;
 
-
-    private final BankService bankService;
-
-    public BankController(BankService bankService) {
-        this.bankService = bankService;
-    }
-
-
-    @GetMapping
-    public List<BankResponse> getBanks(){
-        return this.bankService.findAll();
-    }
-
-    @PostMapping
-    public BankResponse createOrUpdateBank(@RequestBody BankRequest bankRequest){
-        return this.bankService.saveOrUpdate(bankRequest);
-    }
-
-    @GetMapping("/{id}")
-    public BankResponse getBank(@PathVariable Long id){
-        return this.bankService.findById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public BankResponse destroyBank(@PathVariable Long id){
-        return this.bankService.deleteById(id);
-    }
 }
