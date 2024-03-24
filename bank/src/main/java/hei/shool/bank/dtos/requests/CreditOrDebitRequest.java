@@ -3,7 +3,7 @@ package hei.shool.bank.dtos.requests;
 import java.math.BigDecimal;
 
 public record CreditOrDebitRequest (
-  Long accountId,
+  String accountNumber,
   String password,
 
   BigDecimal amount,

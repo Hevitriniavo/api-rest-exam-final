@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     comment VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS transactions_histories (
+CREATE TABLE IF NOT EXISTS transaction_histories (
     id BIGSERIAL PRIMARY KEY,
     transaction_id BIGINT REFERENCES transactions(id) ON DELETE CASCADE ON UPDATE CASCADE,
     operation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

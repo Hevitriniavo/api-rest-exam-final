@@ -255,9 +255,7 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    private T mapResultSetToEntity(ResultSet rs) throws SQLException {
+    }private T mapResultSetToEntity(ResultSet rs) throws SQLException {
         try {
             Constructor<T> constructor = entityClass.getDeclaredConstructor();
             constructor.setAccessible(true);
@@ -274,12 +272,17 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
                     } else if (field.getType() == BigDecimal.class && value instanceof Float) {
                         BigDecimal bigDecimalValue = BigDecimal.valueOf((Float) value);
                         field.set(entity, bigDecimalValue);
-                    }else if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
+                    } else if (value instanceof java.sql.Date && field.getType() == LocalDate.class) {
                         LocalDate localDate = ((java.sql.Date) value).toLocalDate();
                         field.set(entity, localDate);
-                    } else if (value instanceof java.sql.Timestamp && field.getType() == LocalDateTime.class) {
-                        LocalDateTime localDateTime = ((java.sql.Timestamp) value).toLocalDateTime();
-                        field.set(entity, localDateTime);
+                    } else if (value instanceof java.sql.Timestamp) {
+                        if (field.getType() == LocalDateTime.class) {
+                            LocalDateTime localDateTime = ((java.sql.Timestamp) value).toLocalDateTime();
+                            field.set(entity, localDateTime);
+                        } else if (field.getType() == LocalDate.class) {
+                            LocalDate localDate = ((java.sql.Timestamp) value).toLocalDateTime().toLocalDate();
+                            field.set(entity, localDate);
+                        }
                     } else if (field.getType() == Double.class && value instanceof BigDecimal) {
                         Double doubleValue = ((BigDecimal) value).doubleValue();
                         field.set(entity, doubleValue);
@@ -297,6 +300,7 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
             throw new RuntimeException("Error while mapping ResultSet to entity", e);
         }
     }
+
 }
 
 

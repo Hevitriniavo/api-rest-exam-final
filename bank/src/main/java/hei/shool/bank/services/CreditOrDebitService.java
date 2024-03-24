@@ -7,4 +7,6 @@ public interface CreditOrDebitService {
 
     CreditOrDebitResponse credit (CreditOrDebitRequest request);
     CreditOrDebitResponse debit (CreditOrDebitRequest request);
+
+    boolean activeOverDraft(String accountId);
 }

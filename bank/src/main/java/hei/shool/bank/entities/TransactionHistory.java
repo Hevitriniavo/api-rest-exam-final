@@ -5,6 +5,8 @@ import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @ToString
@@ -20,7 +22,7 @@ public class TransactionHistory implements Identifiable<Long> {
 
     private Long transactionId;
 
-    private String operationDate;
+    private LocalDate operationDate;
 
     @Override
     public void setId(Long id) {
