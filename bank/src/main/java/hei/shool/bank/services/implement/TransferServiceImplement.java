@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -71,6 +73,7 @@ public class TransferServiceImplement implements TransferService {
                 .receiverAccountId(receiverAccountId)
                 .amount(amount.doubleValue())
                 .reason(description)
+                .effectiveDate(LocalDateTime.now())
                 .status(TransferStatus.COMPLETED)
                 .build();
     }

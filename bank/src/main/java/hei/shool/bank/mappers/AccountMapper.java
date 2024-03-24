@@ -18,6 +18,7 @@ public class AccountMapper implements Mapper<Account, AccountRequest, AccountRes
                 entity.getPassword(),
                 entity.getLastName(),
                 entity.getFirstName(),
+                entity.getEmail(),
                 entity.getBirthday(),
                 entity.getBalance(),
                 entity.getNetMonthlySalary(),
