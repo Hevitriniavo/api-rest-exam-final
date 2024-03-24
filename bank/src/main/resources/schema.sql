@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 
-/*CREATE TABLE IF NOT EXISTS bank_solds (
+CREATE TABLE IF NOT EXISTS bank_solds (
     id BIGSERIAL PRIMARY KEY,
     value DECIMAL(10, 2) NOT NULL
 );
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS history_bank_solds (
     value DECIMAL(10, 2) NOT NULL,
     bank_sold_id BIGINT REFERENCES bank_solds(id) ON DELETE CASCADE ON UPDATE CASCADE,
     bank_sold_date DATE NOT NULL DEFAULT CURRENT_DATE
-);*/
+);
 
 CREATE TABLE IF NOT EXISTS accounts (
     id BIGSERIAL PRIMARY KEY,

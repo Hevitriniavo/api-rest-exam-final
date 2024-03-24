@@ -37,14 +37,11 @@ Le MCD représente les entités et leurs relations dans un schéma de données d
 * Les colonnes sender_account_id et receiver_account_id de Transfer font référence à l'id de la table Account.  
 * La colonne bank_id de la table Transfer fait référence à l'id de la table Bank.
 
-**InterestValid** (id, #account_id, amount, interest_rate, interest_date)  
+**Interest** (id, #account_id, amount, interest_rate, interest_date)  
 * Les colonnes account_id de InterestValid font référence à l'id de la table Account.
 
 **HistoryInterests** (id, #account_id, amount, interest_rate, interest_date)  
 * Les colonnes account_id de HistoryInterests font référence à l'id de la table Account.
-
-**InterestNotValid** (id, #account_id, amount, interest_rate, interest_date)  
-* Les colonnes account_id de InterestNotValid font référence à l'id de la table Account.
 
 **LoanValid** (id, #account_id, amount, loans_date, status)  
 * Les colonnes account_id de LoanValid font référence à l'id de la table Account.

@@ -47,7 +47,70 @@ paths:
           description: bank not found
         '500':
           description: Internal server error
+  
+  /banks/create:
+    post:
+      tags:
+        - Banks
+      summary: Create a new bank
+      operationId: createBank
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank'
+      responses:
+        '200':
+          description: Bank created successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
 
+  /banks/update:
+    put:
+      tags:
+        - Banks
+      summary: Update banks
+      description: edit bank items.
+      operationId: updateBank
+      parameters:
+        - name: id 
+          in: path
+          description: Id that needs to be update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent bank
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank'
+      responses:
+        '200':
+          description: modification successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '400':
+          description: Bad request
+        '403':
+          description: Invalid account supplied
+        '404':
+          description: account not found
+        '500': 
+          description:  Internal server error
 components:
   schemas:
     Bank:
