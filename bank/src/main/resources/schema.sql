@@ -7,7 +7,7 @@ CREATE DATABASE numeric_bank;
 CREATE TABLE IF NOT EXISTS banks (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
-    code VARCHAR(20),
+    code VARCHAR(20) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL
 );
 
@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS bank_solds (
 CREATE TABLE IF NOT EXISTS history_bank_solds (
     id BIGSERIAL PRIMARY KEY,
     value DECIMAL(10, 2) NOT NULL,
+    bank_sold_id BIGINT REFERENCES bank_solds(id) ON DELETE CASCADE ON UPDATE CASCADE,
     bank_sold_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
-
 
 CREATE TABLE IF NOT EXISTS accounts (
     id BIGSERIAL PRIMARY KEY,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     overdraft_enabled BOOLEAN DEFAULT FALSE,
     creation_date DATE DEFAULT CURRENT_DATE,
     last_withdrawal_date DATE,
-    bank_solds_id BIGINT NULL REFERENCES bank_solds(id) ON DELETE CASCADE ON UPDATE CASCADE
+    bank_sold_id BIGINT NULL REFERENCES bank_solds(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS transactions (
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS transfers (
     amount DECIMAL(10, 2) NOT NULL,
     reason VARCHAR(255),
     effective_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(255) DEFAULT 'PENDING',
+    status VARCHAR(255) DEFAULT 'PENDING'  CHECK (status IN ('PENDING', 'COMPLETED', 'FAILED')),
     reference VARCHAR(255) UNIQUE NOT NULL
 );
 
@@ -106,13 +106,6 @@ CREATE TABLE IF NOT EXISTS loan_valid (
     status INT NOT NULL CHECK (status IN (0, 100))
 );
 
-CREATE TABLE IF NOT EXISTS loan_valid (
-    id BIGSERIAL PRIMARY KEY,
-    account_id BIGINT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    amount DECIMAL(10, 2) NOT NULL,
-    loans_date DATE NOT NULL,
-    status INT NOT NULL CHECK (status IN (0, 100))
-);
 
 CREATE TABLE IF NOT EXISTS History_loans (
     id BIGSERIAL PRIMARY KEY,
