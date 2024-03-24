@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 
 @Component
 public class AccountMapper implements Mapper<Account, AccountRequest, AccountResponse> {
@@ -24,6 +23,7 @@ public class AccountMapper implements Mapper<Account, AccountRequest, AccountRes
                 entity.getNetMonthlySalary(),
                 entity.getAccountNumber(),
                 entity.isOverdraftEnabled(),
+                entity.getOverdraftLimit(),
                 entity.getCreationDate(),
                 entity.getLastWithdrawalDate()
         );

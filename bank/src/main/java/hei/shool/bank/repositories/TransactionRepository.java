@@ -92,27 +92,28 @@ public class TransactionRepository extends AbstractCrudOperations<Transaction, L
 
     private TransactionResponse mapToTransactionResponse(ResultSet rs) throws SQLException {
         AccountResponse accountResponse = new AccountResponse(
-                rs.getLong("a.id"),
-                rs.getString("a.password"),
-                rs.getString("a.last_name"),
-                rs.getString("a.first_name"),
-                rs.getString("a.email"),
-                rs.getDate("a.birthday").toLocalDate(),
-                rs.getBigDecimal("a.balance"),
-                rs.getBigDecimal("a.net_monthly_salary"),
-                rs.getString("a.account_number"),
-                rs.getBoolean("a.overdraft_enabled"),
-                rs.getDate("a.creation_date").toLocalDate(),
-                rs.getDate("a.last_withdrawal_date").toLocalDate()
+                rs.getLong("id"),
+                rs.getString("password"),
+                rs.getString("last_name"),
+                rs.getString("first_name"),
+                rs.getString("email"),
+                rs.getDate("birthday") != null ? rs.getDate("birthday").toLocalDate() : null,
+                rs.getBigDecimal("balance"),
+                rs.getBigDecimal("net_monthly_salary"),
+                rs.getString("account_number"),
+                rs.getBoolean("overdraft_enabled"),
+                rs.getBigDecimal("overdraft_limit"),
+                rs.getDate("creation_date") != null ? rs.getDate("creation_date").toLocalDate() : null,
+                rs.getDate("last_withdrawal_date") != null ? rs.getDate("last_withdrawal_date").toLocalDate() : null
         );
         return new TransactionResponse(
-                rs.getLong("t.id"),
+                rs.getLong("account_id"),
                 accountResponse,
-                rs.getBigDecimal("t.amount"),
-                rs.getString("t.reason"),
-                TransactionType.valueOf(rs.getString("t.transaction_type")),
-                rs.getLong("t.category_id"),
-                rs.getString("t.comment")
+                rs.getBigDecimal("amount"),
+                rs.getString("reason"),
+                TransactionType.valueOf(rs.getString("transaction_type")),
+                rs.getLong("category_id"),
+                rs.getString("comment")
         );
     }
 

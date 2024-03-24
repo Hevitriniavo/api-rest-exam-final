@@ -21,6 +21,7 @@ public record AccountResponse(
         String accountNumber,
 
         boolean overdraftEnabled,
+         BigDecimal overdraftLimit,
 
         LocalDate creationDate,
 
