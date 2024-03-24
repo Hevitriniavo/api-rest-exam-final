@@ -21,83 +21,78 @@ import java.time.LocalDate;
 public class CreditOrDebitServiceImplement implements CreditOrDebitService {
 
     private final TransactionRepository transactionRepository;
-
     private final AccountRepository accountRepository;
-
     private final TransactionHistoryRepository transactionHistoryRepository;
 
     @Override
     public CreditOrDebitResponse credit(CreditOrDebitRequest request) {
-        Account account = accountRepository.findByField("accountNumber", request.accountNumber())
-                .orElseThrow(() -> new IllegalArgumentException("Compte non trouvé"));
-
-        if (!account.getPassword().equals(request.password())) {
-            return new CreditOrDebitResponse(false, "Mot de passe incorrect");
-        }
-
+        Account account = findAccountByNumber(request.accountNumber(), request.password());
         BigDecimal currentBalance = account.getBalance();
         BigDecimal newBalance = currentBalance.add(request.amount());
         account.setBalance(newBalance);
-        Transaction transaction = Transaction.builder()
-                .accountId(account.getId())
-                .amount(request.amount())
-                .reason(request.description() != null ? request.description() : "Credit")
-                .transactionType(TransactionType.CREDIT)
-                .comment(request.description())
-                .build();
+        Transaction transaction = buildTransaction(account.getId(), request.amount(), request.description(), TransactionType.CREDIT);
         Transaction savedTransaction = transactionRepository.saveOrUpdate(transaction);
-
-        TransactionHistory transactionHistory = TransactionHistory.builder()
-                .transactionId(savedTransaction.getId())
-                .operationDate(LocalDate.now())
-                .build();
+        TransactionHistory transactionHistory = buildTransactionHistory(savedTransaction.getId());
         transactionHistoryRepository.saveOrUpdate(transactionHistory);
         accountRepository.saveOrUpdate(account);
-
         return new CreditOrDebitResponse(true, "Opération de crédit réussie");
     }
 
     @Override
     public CreditOrDebitResponse debit(CreditOrDebitRequest request) {
-        Account account = accountRepository.findByField("accountNumber", request.accountNumber())
-                .orElseThrow(() -> new IllegalArgumentException("Compte non trouvé"));
-
-        if (!account.getPassword().equals(request.password())) {
-            return new CreditOrDebitResponse(false, "Mot de passe incorrect.");
-        }
-
+        Account account = findAccountByNumber(request.accountNumber(), request.password());
         BigDecimal currentBalance = account.getBalance();
         BigDecimal newBalance = currentBalance.subtract(request.amount());
-
         if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
             return new CreditOrDebitResponse(false, "Fonds insuffisants");
         }
-
         account.setBalance(newBalance);
-        Transaction transaction = Transaction.builder()
-                .accountId(account.getId())
-                .amount(request.amount())
-                .reason(request.description() != null ? request.description(): "Debit")
-                .transactionType(TransactionType.DEBIT)
-                .comment(request.description())
-                .build();
+        Transaction transaction = buildTransaction(account.getId(), request.amount(), request.description(), TransactionType.DEBIT);
         Transaction savedTransaction = transactionRepository.saveOrUpdate(transaction);
-        TransactionHistory transactionHistory = TransactionHistory.builder()
-                .transactionId(savedTransaction.getId())
-                .operationDate(LocalDate.now())
-                .build();
+        TransactionHistory transactionHistory = buildTransactionHistory(savedTransaction.getId());
         transactionHistoryRepository.saveOrUpdate(transactionHistory);
         accountRepository.saveOrUpdate(account);
         return new CreditOrDebitResponse(true, "Opération de débit réussie");
     }
-
     @Override
-    public boolean activeOverDraft(String  accountNumber) {
-        Account account = accountRepository.findByField("accountNumber", accountNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Compte non trouvé"));
+    public boolean activeOverDraft(String accountNumber) {
+        Account account = findAccountByNumber(accountNumber);
         account.setOverdraftEnabled(true);
         Account savedAccount = accountRepository.saveOrUpdate(account);
         return savedAccount.isOverdraftEnabled();
     }
 
+    private Account findAccountByNumber(String accountNumber) {
+        return accountRepository.findByField("accountNumber", accountNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Compte non trouvé"));
+    }
+
+    private Account findAccountByNumber(String accountNumber, String password) {
+        Account account = findAccountByNumber(accountNumber);
+        verifyPassword(account, password);
+        return account;
+    }
+
+    private void verifyPassword(Account account, String password) {
+        if (!account.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Mot de passe incorrect");
+        }
+    }
+
+    private Transaction buildTransaction(Long accountId, BigDecimal amount, String description, TransactionType transactionType) {
+        return Transaction.builder()
+                .accountId(accountId)
+                .amount(amount)
+                .reason(description != null ? description : "")
+                .transactionType(transactionType)
+                .comment(description)
+                .build();
+    }
+
+    private TransactionHistory buildTransactionHistory(Long transactionId) {
+        return TransactionHistory.builder()
+                .transactionId(transactionId)
+                .operationDate(LocalDate.now())
+                .build();
+    }
 }

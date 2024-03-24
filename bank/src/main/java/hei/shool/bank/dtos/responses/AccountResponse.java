@@ -10,6 +10,7 @@ public record AccountResponse(
         String lastName,
 
         String firstName,
+        String email,
 
         LocalDate birthday,
 

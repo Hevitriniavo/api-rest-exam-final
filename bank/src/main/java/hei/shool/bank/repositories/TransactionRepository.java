@@ -96,6 +96,7 @@ public class TransactionRepository extends AbstractCrudOperations<Transaction, L
                 rs.getString("a.password"),
                 rs.getString("a.last_name"),
                 rs.getString("a.first_name"),
+                rs.getString("a.email"),
                 rs.getDate("a.birthday").toLocalDate(),
                 rs.getBigDecimal("a.balance"),
                 rs.getBigDecimal("a.net_monthly_salary"),

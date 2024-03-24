@@ -6,6 +6,8 @@ import hei.shool.bank.enums.TransferStatus;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -29,7 +31,7 @@ public class Transfer implements Identifiable<Long> {
 
     private String reason;
 
-    private String effectiveDate;
+    private LocalDateTime effectiveDate;
 
     private TransferStatus status;
 
