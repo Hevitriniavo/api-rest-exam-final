@@ -6,6 +6,7 @@ import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -28,19 +29,21 @@ public class Account implements Identifiable<Long> {
 
     private String email;
 
-    private String birthday;
+    private LocalDate birthday;
 
     private BigDecimal balance;
 
     private BigDecimal netMonthlySalary;
 
+    private BigDecimal overdraftLimit;
+
     private String accountNumber;
 
     private boolean overdraftEnabled;
 
-    private String creationDate;
+    private LocalDate creationDate;
 
-    private String lastWithdrawalDate;
+    private LocalDate lastWithdrawalDate;
 
     private Long bankSoldId;
 

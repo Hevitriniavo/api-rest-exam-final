@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class InterestValid implements Identifiable<Long> {
+public class Interest implements Identifiable<Long> {
 
     @Id
     @GeneratedValue

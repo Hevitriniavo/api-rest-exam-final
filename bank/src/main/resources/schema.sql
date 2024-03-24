@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     net_monthly_salary REAL DEFAULT NULL,
     account_number VARCHAR(14) UNIQUE,
+    overdraft_limit DECIMAL(10, 2),
     overdraft_enabled BOOLEAN DEFAULT FALSE,
     creation_date DATE DEFAULT CURRENT_DATE,
     last_withdrawal_date DATE,
@@ -74,7 +75,7 @@ CREATE TABLE IF NOT EXISTS transfers (
     reference VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS interest_valid (
+CREATE TABLE IF NOT EXISTS interest (
     id BIGSERIAL PRIMARY KEY,
     account_id BIGINT REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
@@ -83,14 +84,6 @@ CREATE TABLE IF NOT EXISTS interest_valid (
 );
 
 CREATE TABLE IF NOT EXISTS history_interests (
-    id BIGSERIAL PRIMARY KEY,
-    account_id BIGINT REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    amount DECIMAL(10, 2) NOT NULL,
-    interest_rate DECIMAL(10, 2) NOT NULL,
-    interest_date DATE NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS interest_not_valid (
     id BIGSERIAL PRIMARY KEY,
     account_id BIGINT REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,

@@ -155,7 +155,7 @@ public abstract class AbstractCrudOperations<T extends Identifiable<ID>, ID> imp
         try {
             String query = databaseHelper.querySelectByFieldName(entityClass, column);
             stmt = connection.prepareStatement(query);
-            stmt.setString(1, value);
+            stmt.setObject(1, value);
             rs = stmt.executeQuery();
 
             if (rs.next()) {
