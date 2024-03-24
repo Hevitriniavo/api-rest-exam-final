@@ -111,6 +111,66 @@ paths:
           description: account not found
         '500': 
           description:  Internal server error
+
+  /banks/{id}:
+    get:
+      tags:
+        - Banks
+      summary: Retrieve one of banks by id
+      description: Retrieve only one of all banks in the wallet app, optionally filtered by bank.
+      operationId: getBankById
+      parameters:
+        - name: id 
+          in: path
+          description: The id that needs to be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: id of banks retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: bank not found
+        '500':
+          description: Internal server error
+
+
+    delete:
+      tags:
+        - Banks
+      summary: Delete a bank by id
+      description: You can only delete one bank using the ID
+      operationId: deleteBank
+      parameters:
+        - name: id 
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delete bank successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+        '404':
+          description: bank not found
+        '500':
+          description: Internal server error
 components:
   schemas:
     Bank:
