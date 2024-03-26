@@ -15,6 +15,7 @@ tags:
   - name: Transactions
   - name: TransactionsHistories
   - name: Transfers
+  - name: CreditOrDebit
   - name: InterestValid
   - name: istoryInterests
   - name: InterestNotValid
@@ -470,8 +471,7 @@ paths:
         '500':
           description: Internal server error
 
-  
-  # the end of the path transaction
+   # the end of the path transaction
 
     # begins the path transfer
     
@@ -480,7 +480,7 @@ paths:
       tags:
         - Transfers
       summary: New transfer
-      operationId: createBank
+      operationId: transferTo
       requestBody:
         required: true
         content:
@@ -496,6 +496,94 @@ paths:
                 type: object
                 example: 
                   message: New transfer successfully.
+                  properties: false
+                
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  # the end of the path tranfer
+
+    # begins the path credit or debit
+    
+  /credit:
+    post:
+      tags:
+        - CreditOrDebit
+      summary: New credit
+      operationId: credit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          description: credit successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  message: New credit successfully.
+                  properties: false
+                
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /debit:
+    post:
+      tags:
+        - CreditOrDebit
+      summary: New debit
+      operationId: debit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          description: debit successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  message: New debit successfully.
+                  properties: false
+                
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /active-overdraft:
+    post:
+      tags:
+        - CreditOrDebit
+      summary: active overdraft
+      operationId: activeOverDraft
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          description: active Over Draft
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  message: active Over Draft successfully.
                   properties: false
                 
         '400':
