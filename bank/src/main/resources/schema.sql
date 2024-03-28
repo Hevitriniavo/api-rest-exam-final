@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     account_id BIGINT REFERENCES accounts(id),
     amount DECIMAL(10, 2) NOT NULL,
     category_id BIGINT REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    type VARCHAR(50) NOT NULL  ---(type IN ('CREDIT', 'DEBIT', 'TRANSFER'))
+    type VARCHAR(50) NOT NULL , ---(type IN ('CREDIT', 'DEBIT', 'TRANSFER')),
     description VARCHAR(255),
     operation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
