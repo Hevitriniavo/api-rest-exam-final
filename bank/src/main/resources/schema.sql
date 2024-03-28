@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS loan_histories (
     account_id BIGINT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
     amount DECIMAL(10, 2) NOT NULL,
     loans_date DATE NOT NULL,
-    status VARCHAR(255),
+    status VARCHAR(255)
 );
 
 

@@ -12,6 +12,7 @@ import hei.shool.bank.repositories.TransactionRepository;
 import hei.shool.bank.services.CreditOrDebitService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -76,6 +77,7 @@ public class CreditOrDebitServiceImplement implements CreditOrDebitService {
         } else {
             if (account.isOverdraftEnabled() && (account.getBalance() + account.getOverdraftLimit() >=  request.amount())) {
                 account.debit(request.amount());
+                account.setLastWithdrawalDate(LocalDate.now());
             } else if (!account.isOverdraftEnabled() && account.getBalance() >= request.amount()) {
                 account.debit(request.amount());
             } else {
