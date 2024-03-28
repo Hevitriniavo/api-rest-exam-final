@@ -27,7 +27,7 @@ public class Transfer implements Identifiable<Long> {
 
     private Double amount;
 
-    private String comment;
+    private String description;
 
     private LocalDateTime effectiveDate;
 
