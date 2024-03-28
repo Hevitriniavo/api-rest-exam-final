@@ -1,6 +1,6 @@
 package hei.shool.bank.dtos.responses;
 
-public record CreditOrDebitResponse (
+public record OperationResponse(
   boolean isSuccess,
   String message
 ){}

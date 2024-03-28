@@ -1,12 +1,12 @@
 package hei.shool.bank.entities;
 
-
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
+import hei.shool.bank.enums.LoanStatus;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,24 +15,27 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HistoryBankSold implements Identifiable<Long> {
+public class Loan implements Identifiable<Long> {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private BigDecimal value;
+    private Long accountId;
 
-    private Long bankSoldId;
+    private Double amount;
 
-    private String bankSoldDate;
+    private LocalDate loansDate;
+
+    private LoanStatus status;
     @Override
     public void setId(Long id) {
-      this.id = id;
+        this.id = id;
     }
 
     @Override
     public Long getId() {
         return id;
     }
+
 }

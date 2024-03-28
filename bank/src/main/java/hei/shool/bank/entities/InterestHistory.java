@@ -2,7 +2,6 @@ package hei.shool.bank.entities;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
-import hei.shool.bank.enums.LoanStatus;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
@@ -15,8 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoanValid implements Identifiable<Long> {
-
+public class InterestHistory implements Identifiable<Long> {
     @Id
     @GeneratedValue
     private Long id;
@@ -25,9 +23,10 @@ public class LoanValid implements Identifiable<Long> {
 
     private Double amount;
 
-    private LocalDate loansDate;
+    private Double interestRate;
 
-    private LoanStatus status;
+    private LocalDate interestDate;
+
     @Override
     public void setId(Long id) {
         this.id = id;
@@ -37,5 +36,4 @@ public class LoanValid implements Identifiable<Long> {
     public Long getId() {
         return id;
     }
-
 }

@@ -98,22 +98,20 @@ public class TransactionRepository extends AbstractCrudOperations<Transaction, L
                 rs.getString("first_name"),
                 rs.getString("email"),
                 rs.getDate("birthday") != null ? rs.getDate("birthday").toLocalDate() : null,
-                rs.getBigDecimal("balance"),
-                rs.getBigDecimal("net_monthly_salary"),
+                rs.getDouble("balance"),
+                rs.getDouble("net_monthly_salary"),
                 rs.getString("account_number"),
                 rs.getBoolean("overdraft_enabled"),
-                rs.getBigDecimal("overdraft_limit"),
+                rs.getDouble("overdraft_limit"),
                 rs.getDate("creation_date") != null ? rs.getDate("creation_date").toLocalDate() : null,
                 rs.getDate("last_withdrawal_date") != null ? rs.getDate("last_withdrawal_date").toLocalDate() : null
         );
         return new TransactionResponse(
                 rs.getLong("account_id"),
                 accountResponse,
-                rs.getBigDecimal("amount"),
-                rs.getString("reason"),
-                TransactionType.valueOf(rs.getString("transaction_type")),
+                rs.getDouble("amount"),
                 rs.getLong("category_id"),
-                rs.getString("comment")
+                rs.getString(" description")
         );
     }
 

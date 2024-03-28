@@ -25,23 +25,21 @@ public class Transfer implements Identifiable<Long> {
 
     private Long receiverAccountId;
 
-    private Long bankId;
-
     private Double amount;
 
-    private String reason;
+    private String comment;
 
     private LocalDateTime effectiveDate;
 
-    private TransferStatus status;
+    private Long bankId;
 
     private String reference;
 
+    private TransferStatus status;
     @Override
     public void setId(Long id) {
         this.id = id;
     }
-
     @Override
     public Long getId() {
         return id;

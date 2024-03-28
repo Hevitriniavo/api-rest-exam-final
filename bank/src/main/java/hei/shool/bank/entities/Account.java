@@ -5,7 +5,6 @@ import hei.shool.bank.annotations.Id;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -31,11 +30,11 @@ public class Account implements Identifiable<Long> {
 
     private LocalDate birthday;
 
-    private BigDecimal balance;
+    private Double balance;
 
-    private BigDecimal netMonthlySalary;
+    private Double netMonthlySalary;
 
-    private BigDecimal overdraftLimit;
+    private Double overdraftLimit;
 
     private String accountNumber;
 
@@ -45,7 +44,6 @@ public class Account implements Identifiable<Long> {
 
     private LocalDate lastWithdrawalDate;
 
-    private Long bankSoldId;
 
     @Override
     public void setId(Long id) {
@@ -55,5 +53,24 @@ public class Account implements Identifiable<Long> {
     @Override
     public Long getId() {
         return id;
+    }
+
+    public void credit(Double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+
+    public void debit(Double amount) {
+        if (amount > 0) {
+            balance -= amount;
+        }
+    }
+
+    public void transfer(Account destinationAccount, Double amount) {
+        if (balance >= amount) {
+            debit(amount);
+            destinationAccount.credit(amount);
+        }
     }
 }

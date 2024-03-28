@@ -20,7 +20,7 @@ public class BankSold implements Identifiable<Long> {
     @GeneratedValue
     private Long id;
 
-    private BigDecimal value;
+    private Double value;
     @Override
     public void setId(Long id) {
         this.id = id;

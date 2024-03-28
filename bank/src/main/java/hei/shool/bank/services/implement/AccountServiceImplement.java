@@ -9,7 +9,6 @@ import hei.shool.bank.helpers.Paginate;
 import hei.shool.bank.mappers.AccountMapper;
 import hei.shool.bank.repositories.AccountRepository;
 import hei.shool.bank.services.AccountService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,11 +18,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AccountServiceImplement implements AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+
+    public AccountServiceImplement(AccountRepository accountRepository, AccountMapper accountMapper) {
+        this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
+    }
 
     @Override
     public List<AccountResponse> findAll() {

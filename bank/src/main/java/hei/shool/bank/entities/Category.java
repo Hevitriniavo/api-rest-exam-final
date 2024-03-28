@@ -3,7 +3,6 @@ package hei.shool.bank.entities;
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
 import hei.shool.bank.enums.CategoryName;
-import hei.shool.bank.enums.CategoryType;
 import hei.shool.bank.repositories.Identifiable;
 import lombok.*;
 
@@ -21,8 +20,6 @@ public class Category implements Identifiable<Long> {
     private Long id;
 
     private CategoryName name;
-
-    private CategoryType type;
 
     @Override
     public void setId(Long id) {

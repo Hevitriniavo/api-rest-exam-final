@@ -17,5 +17,6 @@ public interface AccountService {
     AccountResponse deleteById(Long id);
 
     AccountResponse findById(Long id);
+
     AccountResponse login(LoginRequest loginRequest);
 }

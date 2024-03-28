@@ -4,16 +4,18 @@ import hei.shool.bank.entities.Bank;
 import hei.shool.bank.helpers.Paginate;
 import hei.shool.bank.repositories.BankRepository;
 import hei.shool.bank.services.BankService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class BankServiceImplement implements BankService {
 
     private final BankRepository bankRepository;
+
+    public BankServiceImplement(BankRepository bankRepository) {
+        this.bankRepository = bankRepository;
+    }
 
     @Override
     public List<Bank> findAll() {

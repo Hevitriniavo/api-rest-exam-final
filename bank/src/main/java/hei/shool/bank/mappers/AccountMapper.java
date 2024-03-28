@@ -5,9 +5,6 @@ import hei.shool.bank.dtos.responses.AccountResponse;
 import hei.shool.bank.entities.Account;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 @Component
 public class AccountMapper implements Mapper<Account, AccountRequest, AccountResponse> {
     @Override
@@ -31,7 +28,7 @@ public class AccountMapper implements Mapper<Account, AccountRequest, AccountRes
 
     @Override
     public Account toEntity(AccountRequest request) {
-        BigDecimal overdraftLimit = request.netMonthlySalary().divide(BigDecimal.valueOf(3), 2, RoundingMode.HALF_UP);
+        Double overdraftLimit = request.netMonthlySalary() != null ?request.netMonthlySalary() / 3 : 00.00;
         return Account.builder()
                 .id(request.id())
                 .password(request.password())
@@ -39,7 +36,7 @@ public class AccountMapper implements Mapper<Account, AccountRequest, AccountRes
                 .firstName(request.firstName())
                 .email(request.email())
                 .birthday(request.birthday())
-                .balance(BigDecimal.ZERO)
+                .balance(00.00)
                 .netMonthlySalary(request.netMonthlySalary())
                 .overdraftLimit(overdraftLimit)
                 .overdraftEnabled(false)

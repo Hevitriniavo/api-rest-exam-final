@@ -7,19 +7,22 @@ import hei.shool.bank.helpers.Paginate;
 import hei.shool.bank.repositories.TransactionRepository;
 import hei.shool.bank.services.AccountService;
 import hei.shool.bank.services.TransactionService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class TransactionServiceImplement implements TransactionService {
 
     private final TransactionRepository transactionRepository;
 
     private final AccountService accountService;
+
+    public TransactionServiceImplement(TransactionRepository transactionRepository, AccountService accountService) {
+        this.transactionRepository = transactionRepository;
+        this.accountService = accountService;
+    }
 
     @Override
     public List<TransactionResponse> findAll() {
@@ -46,8 +49,6 @@ public class TransactionServiceImplement implements TransactionService {
                 transaction.getId(),
                 accountResponse,
                 transaction.getAmount(),
-                transaction.getReason(),
-                transaction.getTransactionType(),
                 transaction.getCategoryId(),
                 transaction.getComment()
         );

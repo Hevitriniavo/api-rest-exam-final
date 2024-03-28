@@ -1,6 +1,5 @@
 package hei.shool.bank.dtos.requests;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record AccountRequest (
@@ -15,6 +14,6 @@ public record AccountRequest (
 
          LocalDate birthday,
 
-         BigDecimal netMonthlySalary
+         Double netMonthlySalary
 
 ){}
