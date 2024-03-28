@@ -15,6 +15,7 @@ tags:
   - name: Transactions
   - name: TransactionsHistories
   - name: Transfers
+  - name: CreditOrDebit
   - name: InterestValid
   - name: istoryInterests
   - name: InterestNotValid
@@ -132,9 +133,9 @@ paths:
         '400':
           description: Bad request
         '403':
-          description: Invalid account supplied
+          description: Invalid bank supplied
         '404':
-          description: account not found
+          description: bank not found
         '500': 
           description:  Internal server error
 
@@ -197,6 +198,399 @@ paths:
           description: bank not found
         '500':
           description: Internal server error
+
+    # the end of the path bank
+
+    # begins the path account
+
+  /accounts:
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve list of accounts
+      description: Retrieve a list of all accounts in the wallet app, optionally filtered by bank.
+      operationId: getAccounts
+      responses:
+        '200':
+          description: List of accounts retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Account not found
+        '500':
+          description: Internal server error
+
+  /accounts/paginate:
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve one of account by Paginated
+      description: Retrieve only one paginated of all accounts in the wallet app, optionally filtered by account.
+      operationId: getAccountsPaginated
+      parameters:
+        - name: Account paginated
+          in: path
+          description: The account paginated that needs to be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account paginated of accounts retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Account paginatednot found
+        '500':
+          description: Internal server error
+
+  /accounts/create: 
+    post:
+      tags:
+        - Accounts
+      summary: Create a new account
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Account created successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /accounts/login: 
+    post:
+      tags:
+        - Accounts
+      summary: Create login
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: login created successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /accounts/update:
+    put:
+      tags:
+        - Accounts
+      summary: Update an existing account
+      description: edit an existing account by id.
+      operationId: updateAccount
+      requestBody:
+        description: Update an existent account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+        required: true
+      responses:
+        '200':
+          description: modification successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          description: Bad request
+        '403':
+          description: Invalid account supplied
+        '404':
+          description: account not found
+        '500': 
+          description:  Internal server error
+
+  /accounts/{id}:
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve one of accounts by id
+      description: Retrieve only one of all accounts in the wallet app, optionally filtered by account
+      operationId: getAccountById
+      parameters:
+        - name: id 
+          in: path
+          description: The id that needs to be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: id of account retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: account not found
+        '500':
+          description: Internal server error
+
+    delete:
+      tags:
+        - Accounts
+      summary: Delete a account by id
+      description: You can only delete one account using the ID
+      operationId: deleteAccount
+      parameters:
+        - name: id 
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delete account successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '404':
+          description: bank not found
+        '500':
+          description: Internal server error
+
+  # the end of the path account
+
+    # begins the path transaction
+
+  /transactions/account/{accountId}:
+    get:
+      tags:
+        - Transactions
+      summary: Retrieve list of transactions by accountId
+      description: Retrieve one of transaction  in the wallet app, optionally filtered by transaction.
+      operationId: getTransactionsByAccountId
+      parameters:
+        - name: accountId 
+          in: path
+          description: The accountId that needs to be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of transactions retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Account not found
+        '500':
+          description: Internal server error
+  
+  /transactions/account/{accountId}/paginate:
+    get:
+      tags:
+        - Transactions
+      summary: Retrieve list of transactions by accountId paginated
+      description: Retrieve one transaction by accountId paginated in the wallet app, optionally filtered by transaction.
+      operationId: getPaginatedTransactionsByAccountId
+      parameters:
+        - name: accountId paginated 
+          in: path
+          description: The accountId paginated that needs to be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of transactions accountId paginated retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Account not found
+        '500':
+          description: Internal server error
+
+   # the end of the path transaction
+
+    # begins the path transfer
+    
+  /transfer:
+    post:
+      tags:
+        - Transfers
+      summary: New transfer
+      operationId: transferTo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          description: New transfer successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  message: New transfer successfully.
+                  properties: false
+                
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  # the end of the path tranfer
+
+    # begins the path credit or debit
+    
+  /credit:
+    post:
+      tags:
+        - CreditOrDebit
+      summary: New credit
+      operationId: credit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          description: credit successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  message: New credit successfully.
+                  properties: false
+                
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /debit:
+    post:
+      tags:
+        - CreditOrDebit
+      summary: New debit
+      operationId: debit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          description: debit successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  message: New debit successfully.
+                  properties: false
+                
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /active-overdraft:
+    post:
+      tags:
+        - CreditOrDebit
+      summary: active overdraft
+      operationId: activeOverDraft
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transfer'
+      responses:
+        '200':
+          description: active Over Draft
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  message: active Over Draft successfully.
+                  properties: false
+                
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
 components:
   schemas:
     Bank:
@@ -257,7 +651,7 @@ components:
           type: number
           format: float
           description: The value of the bank balance.
-        bank_sold_date:
+        bankSoldDate:
           type: string
           format: date
           description: The date of the bank balance.
@@ -272,10 +666,10 @@ components:
         password:
           type: string
           description: The password of the account.
-        last_name:
+        lastName:
           type: string
           description: The last name of the account holder.
-        first_name:
+        firstName:
           type: string
           description: The first name of the account holder.
         email:
@@ -290,28 +684,32 @@ components:
           type: number
           format: float
           description: The current balance of the account.
-        net_monthly_salary:
+        netMonthlySalary:
           type: number
           format: float
           description: The net monthly salary of the account holder.
-        account_number:
+        accountNumber:
           type: string
           description: The account number.
-        overdraft_enabled:
+        overdraftEnabled:
           type: boolean
           description: Indicates if overdraft is enabled for the account.
-        creation_date:
+        overdraftLimit:
+          type: number
+          format: float
+          description: Indicates if overdraft is limit for the account.
+        creationDate:
           type: string
           format: date
           description: The date when the account was created.
-        last_withdrawal_date:
+        lastWithdrawalDate:
           type: string
           format: date
           description: The date of the last withdrawal.
-        bank_solds_id:
+        bank_sold_id:
           type: integer
           format: int64
-          description: Reference to the bank balance.
+          description: The bank sold associated with the account.
 
     Transaction:
       type: object
@@ -320,7 +718,7 @@ components:
           type: integer
           format: int64
           description: Unique identifier for the transaction.
-        account_id:
+        accountId:
           type: integer
           format: int64
           description: The account associated with the transaction.
@@ -331,7 +729,7 @@ components:
         reason:
           type: string
           description: The reason for the transaction.
-        transaction_type:
+        transactionType:
           type: string
           description: The type of transaction.
         category_id:
@@ -349,11 +747,11 @@ components:
           type: integer
           format: int64
           description: Unique identifier for the transaction history.
-        transaction_id:
+        transactionId:
           type: integer
           format: int64
           description: The transaction associated with the history.
-        operation_date:
+        operationDate:
           type: string
           format: date-time
           description: The date and time of the operation.
@@ -365,15 +763,15 @@ components:
           type: integer
           format: int64
           description: Unique identifier for the transfer.
-        sender_account_id:
+        senderAccountId:
           type: integer
           format: int64
           description: The account ID of the sender.
-        receiver_account_id:
+        receiverAccountId:
           type: integer
           format: int64
           description: The account ID of the receiver.
-        bank_id:
+        bankId:
           type: integer
           format: int64
           description: The bank associated with the transfer.
@@ -384,7 +782,7 @@ components:
         reason:
           type: string
           description: The reason for the transfer.
-        effective_date:
+        effectiveDate:
           type: string
           format: date-time
           description: The effective date of the transfer.
@@ -402,7 +800,7 @@ components:
           type: integer
           format: int64
           description: Unique identifier for the valid interest.
-        account_id:
+        accountId:
           type: integer
           format: int64
           description: The account associated with the interest.
@@ -410,11 +808,11 @@ components:
           type: number
           format: float
           description: The amount of the interest.
-        interest_rate:
+        interestRate:
           type: number
           format: float
           description: The interest rate.
-        interest_date:
+        interestDate:
           type: string
           format: date
           description: The date of the interest.
@@ -426,7 +824,7 @@ components:
           type: integer
           format: int64
           description: Unique identifier for the interest history.
-        account_id:
+        accountId:
           type: integer
           format: int64
           description: The account associated with the interest history.
@@ -434,11 +832,11 @@ components:
           type: number
           format: float
           description: The amount of the interest.
-        interest_rate:
+        interestRate:
           type: number
           format: float
           description: The interest rate.
-        interest_date:
+        interestDate:
           type: string
           format: date
           description: The date of the interest.
@@ -450,7 +848,7 @@ components:
           type: integer
           format: int64
           description: Unique identifier for the invalid interest.
-        account_id:
+        accountId:
           type: integer
           format: int64
           description: The account associated with the invalid interest.
@@ -458,11 +856,11 @@ components:
           type: number
           format: float
           description: The amount of the invalid interest.
-        interest_rate:
+        interestRate:
           type: number
           format: float
           description: The interest rate.
-        interest_date:
+        interestDate:
           type: string
           format: date
           description: The date of the invalid interest.
@@ -474,7 +872,7 @@ components:
           type: integer
           format: int64
           description: "Unique identifier for the loan."
-        account_id:
+        accountId:
           type: integer
           format: int64
           description: "ID of the account associated with the loan."
@@ -482,7 +880,7 @@ components:
           type: number
           format: float
           description: "The amount of the loan."
-        loans_date:
+        loansDate:
           type: string
           format: date
           description: "Date when the loan was issued."
@@ -500,7 +898,7 @@ components:
           type: integer
           format: int64
           description: "Unique identifier for the historical loan record."
-        account_id:
+        accountId:
           type: integer
           format: int64
           description: "ID of the account associated with the historical loan record."
@@ -508,7 +906,7 @@ components:
           type: number
           format: float
           description: "The amount of the loan."
-        loans_date:
+        loansDate:
           type: string
           format: date
           description: "Date when the loan was issued."
@@ -526,7 +924,7 @@ components:
           type: integer
           format: int64
           description: "Unique identifier for the invalid loan."
-        account_id:
+        accountId:
           type: integer
           format: int64
           description: "ID of the account associated with the invalid loan."
@@ -534,7 +932,7 @@ components:
           type: number
           format: float
           description: "The amount of the invalid loan."
-        loans_date:
+        loansDate:
           type: string
           format: date
           description: "Date when the invalid loan was issued."
