@@ -6,10 +6,7 @@ import hei.shool.bank.services.implement.CreditOrDebitServiceImplement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,9 +27,10 @@ public class CreditOrDebitController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/activate-overdraft")
-    public ResponseEntity<OperationResponse> activeOverDraft(@RequestBody String accountNumber) {
+    @PutMapping("/activate-overdraft/{accountNumber}")
+    public ResponseEntity<OperationResponse> activeOverDraft(@PathVariable String accountNumber) {
         OperationResponse result = creditOrDebitService.activeOverDraft(accountNumber);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 }

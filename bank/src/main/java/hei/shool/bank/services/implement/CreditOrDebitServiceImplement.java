@@ -41,41 +41,59 @@ public class CreditOrDebitServiceImplement implements CreditOrDebitService {
         return processTransaction(request, TransactionType.DEBIT, "Opération de débit réussie");
     }
 
-    private OperationResponse processTransaction(CreditOrDebitRequest request, TransactionType transactionType, String successMessage) {
+    private Optional<Account> findAccountAndVerifyPassword(CreditOrDebitRequest request) {
         Optional<Account> optionalAccount = accountRepository.findByField("accountNumber", request.accountNumber());
-        Optional<Category> optionalCategory = categoryRepository.findById(request.categoryId());
-
-        if (optionalAccount.isPresent() && optionalCategory.isPresent()) {
-            Account account = optionalAccount.get();
-            if (!account.getPassword().equals(request.password())) {
-                return new OperationResponse(false, "Mot de passe incorrect");
-            }
-            Transaction transaction = Transaction.builder()
-                    .accountId(account.getId())
-                    .categoryId(request.categoryId())
-                    .type(transactionType)
-                    .description(request.description())
-                    .operationDate(LocalDateTime.now())
-                    .amount(request.amount())
-                    .build();
-            if (transactionType == TransactionType.CREDIT) {
-                account.credit(request.amount());
-            } else {
-                account.debit(request.amount());
-            }
-            transactionRepository.saveOrUpdate(transaction);
-            accountRepository.saveOrUpdate(account);
-            return new OperationResponse(true, successMessage);
-        } else {
-            if (optionalAccount.isEmpty()) {
-                return new OperationResponse(false, "Compte non trouvé. Une erreur s'est produite lors de l'opération");
-            } else {
-                return new OperationResponse(false, "Catégorie non trouvée. Veuillez fournir une catégorie valide.");
-            }
+        if (optionalAccount.isEmpty()) {
+            return Optional.empty();
         }
+
+        Account account = optionalAccount.get();
+        if (!account.getPassword().equals(request.password())) {
+            return Optional.empty();
+        }
+
+        return Optional.of(account);
     }
 
+    private OperationResponse performTransaction(Account account, CreditOrDebitRequest request, TransactionType transactionType, String successMessage) {
+        Optional<Category> optionalCategory = categoryRepository.findById(request.categoryId());
+        if (optionalCategory.isEmpty()) {
+            return new OperationResponse(false, "Catégorie non trouvée. Veuillez fournir une catégorie valide.");
+        }
 
+        Category category = optionalCategory.get();
+        Transaction transaction = Transaction.builder()
+                .accountId(account.getId())
+                .categoryId(category.getId())
+                .type(transactionType)
+                .description(request.description())
+                .operationDate(LocalDateTime.now())
+                .amount(request.amount())
+                .build();
+
+        if (transactionType == TransactionType.CREDIT) {
+            account.credit(request.amount());
+        } else {
+            if (account.isOverdraftEnabled() && (account.getBalance() + account.getOverdraftLimit() >=  request.amount())) {
+                account.debit(request.amount());
+            } else if (!account.isOverdraftEnabled() && account.getBalance() >= request.amount()) {
+                account.debit(request.amount());
+            } else {
+                return new OperationResponse(false, "Solde insuffisant pour effectuer cette opération");
+            }
+        }
+
+        transactionRepository.saveOrUpdate(transaction);
+        accountRepository.saveOrUpdate(account);
+        return new OperationResponse(true, successMessage);
+    }
+
+    public OperationResponse processTransaction(CreditOrDebitRequest request, TransactionType transactionType, String successMessage) {
+        Optional<Account> optionalAccount = findAccountAndVerifyPassword(request);
+        return optionalAccount.map(account -> performTransaction(account, request, transactionType, successMessage))
+                .orElseGet(() -> new OperationResponse(false, "Compte non trouvé. Une erreur s'est produite lors de l'opération"));
+
+    }
 
     @Override
     public OperationResponse activeOverDraft(String accountNumber) {

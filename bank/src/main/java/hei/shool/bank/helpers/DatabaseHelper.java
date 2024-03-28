@@ -2,8 +2,6 @@ package hei.shool.bank.helpers;
 
 import hei.shool.bank.annotations.GeneratedValue;
 import hei.shool.bank.annotations.Id;
-import hei.shool.bank.repositories.Identifiable;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;

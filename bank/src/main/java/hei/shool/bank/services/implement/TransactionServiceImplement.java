@@ -50,7 +50,7 @@ public class TransactionServiceImplement implements TransactionService {
                 accountResponse,
                 transaction.getAmount(),
                 transaction.getCategoryId(),
-                transaction.getComment()
+                transaction.getDescription()
         );
     }
 }
